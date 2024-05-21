@@ -1,20 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Image } from 'react-native';
+import * as Font from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native';
+import RootNavigation from './src/navigation/root';
+import { theme } from './src/theme';
+import { ThemeProvider } from './src/context/theme';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+	const [appIsReady, setAppIsReady] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	useEffect(() => {
+		async function prepare() {
+			try {
+				await Font.loadAsync({
+					poppinsBlack: require('./assets/Fonts/Poppins-Black.ttf'),
+					poppinsBold: require('./assets/Fonts/Poppins-Bold.ttf'),
+					poppinsRegular: require('./assets/Fonts/Poppins-Regular.ttf'),
+					poppinsSemiBold: require('./assets/Fonts/Poppins-SemiBold.ttf'),
+					poppinsLight: require('./assets/Fonts/Poppins-Light.ttf'),
+					poppinsExtraLight: require('./assets/Fonts/Poppins-ExtraLight.ttf'),
+					poppinsExtraBold: require('./assets/Fonts/Poppins-ExtraBold.ttf'),
+					poppinsMedium: require('./assets/Fonts/Poppins-Medium.ttf'),
+				});
+				await new Promise(resolve => setTimeout(resolve, 2000));
+			} catch (e) {
+				console.warn(e);
+			} finally {
+				setAppIsReady(true);
+			}
+		}
+
+		prepare();
+	}, []);
+
+	if (!appIsReady) {
+		return null;
+	}
+
+	return (
+		<ThemeProvider value={theme}>
+			<NavigationContainer>
+				<RootNavigation />
+			</NavigationContainer>
+		</ThemeProvider>
+	);
+}
