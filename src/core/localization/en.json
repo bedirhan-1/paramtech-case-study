@@ -5,26 +5,22 @@
     "get-paid": "get paid",
     "save": "Save",
     "update": "Update",
-    "done": "Done"
+    "done": "Done",
+    "delete": "Delete"
   },
   "Addresses": {
     "saved-addresses": "Saved Addresses",
-    "my-addresses": "My Addresses",
-    "your-address-info": "Your Address Information",
-    "add-new-address": "Add New Address"
+    "my-addresses": "My Addresses"
   },
   "Add-Address": {
     "address-title": "Address title (Home, workplace etc.)",
     "city" : "City",
     "district": "District",
-    "address-details": "Address details"
+    "address-details": "Address details",
+    "add-success": "Your address has been created successfully!",
+    "update-success": "Your address has been updated successfully!",
+    "delete-success": "Your address has been deleted successfully!"
   },
-
-
-
-
-
-
   "Navigation": {
     "my-addresses": "My Addresses",
     "your-address-info": "Your Address Information"
