@@ -1,14 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
-import { NavigationContainer } from '@react-navigation/native';
 import RootNavigation from './src/navigation/root';
 import { theme } from './src/theme';
 import { ThemeProvider } from './src/context/theme';
+import { ActivityIndicator } from 'react-native';
+import { useTheme } from './src/hooks/useTheme';
+import { store } from './src/store/store';
+import { Provider } from 'react-redux';
 
 export default function App() {
 	const [appIsReady, setAppIsReady] = useState(false);
-
+	const { ColorPallet } = useTheme();
 	useEffect(() => {
 		async function prepare() {
 			try {
@@ -34,14 +36,20 @@ export default function App() {
 	}, []);
 
 	if (!appIsReady) {
-		return null;
+		return (
+			<ActivityIndicator
+				size={'large'}
+				color={ColorPallet.brand.primary}
+				style={{ flex: 1 }}
+			/>
+		);
 	}
 
 	return (
-		<ThemeProvider value={theme}>
-			<NavigationContainer>
+		<Provider store={store}>
+			<ThemeProvider value={theme}>
 				<RootNavigation />
-			</NavigationContainer>
-		</ThemeProvider>
+			</ThemeProvider>
+		</Provider>
 	);
 }
