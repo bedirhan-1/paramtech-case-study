@@ -235,6 +235,10 @@ export const TextTheme = {
 	selectedPlaceholder: {
 		color: ColorPallet.grayscale.darkGrey,
 	},
+	bottomSheet: {
+		marginTop: 16,
+		textAlign: 'center',
+	},
 };
 
 export interface IColorPallet {
