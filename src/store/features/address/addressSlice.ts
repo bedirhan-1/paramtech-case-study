@@ -7,40 +7,77 @@ import {
 	StatusTypes,
 } from '../../../types/addressSliceTypes';
 
-export const fetchAddresses = createAsyncThunk<IAddress[]>(
-	AddressDispatchAction.GET_ADDRESSES,
-	async () => {
+export const fetchAddresses = createAsyncThunk<
+	IAddress[],
+	void,
+	{ rejectValue: string }
+>(AddressDispatchAction.GET_ADDRESSES, async (_, { rejectWithValue }) => {
+	try {
 		const response = await api.address.getAll();
 		return response.data;
-	},
-);
+	} catch (error: any) {
+		return rejectWithValue(
+			error.response?.data?.message || 'Failed to fetch addresses',
+		);
+	}
+});
 
-export const addAddress = createAsyncThunk<IAddress, CreatedAddress>(
+export const addAddress = createAsyncThunk<
+	IAddress,
+	CreatedAddress,
+	{ rejectValue: string }
+>(
 	AddressDispatchAction.ADD_ADDRESS,
-	async newAddress => {
-		const response = await api.address.add(newAddress);
-		return response.data as IAddress;
+	async (newAddress, { rejectWithValue }) => {
+		try {
+			const response = await api.address.add(newAddress);
+			return response.data as IAddress;
+		} catch (error: any) {
+			return rejectWithValue(
+				error.response?.data?.message || 'Failed to add address',
+			);
+		}
 	},
 );
 
-export const updateAddress = createAsyncThunk<IAddress, IAddress>(
+export const updateAddress = createAsyncThunk<
+	IAddress,
+	IAddress,
+	{ rejectValue: string }
+>(
 	AddressDispatchAction.UPDATE_ADDRESS,
-	async updatedAddress => {
-		const response = await api.address.update(updatedAddress);
-		return response.data;
+	async (updatedAddress, { rejectWithValue }) => {
+		try {
+			const response = await api.address.update(updatedAddress);
+			return response.data;
+		} catch (error: any) {
+			return rejectWithValue(
+				error.response?.data?.message || 'Failed to update address',
+			);
+		}
 	},
 );
 
-export const deleteAddress = createAsyncThunk<string, string>(
+export const deleteAddress = createAsyncThunk<
+	string,
+	string,
+	{ rejectValue: string }
+>(
 	AddressDispatchAction.DELETE_ADDRESS,
-	async deletedAddressId => {
-		await api.address.delete(deletedAddressId);
-		return deletedAddressId;
+	async (deletedAddressId, { rejectWithValue }) => {
+		try {
+			await api.address.delete(deletedAddressId);
+			return deletedAddressId;
+		} catch (error: any) {
+			return rejectWithValue(
+				error.response?.data?.message || 'Failed to delete address',
+			);
+		}
 	},
 );
 
 const initialState: AddressesState = {
-	addresses: [] as IAddress[],
+	addresses: [],
 	status: StatusTypes.idle,
 	error: null,
 };
@@ -55,13 +92,16 @@ const addressSlice = createSlice({
 			.addCase(fetchAddresses.pending, state => {
 				state.status = StatusTypes.loading;
 			})
-			.addCase(fetchAddresses.fulfilled, (state, action) => {
-				state.status = StatusTypes.succeeded;
-				state.addresses = action.payload;
-			})
+			.addCase(
+				fetchAddresses.fulfilled,
+				(state, action: PayloadAction<IAddress[]>) => {
+					state.status = StatusTypes.succeeded;
+					state.addresses = action.payload;
+				},
+			)
 			.addCase(fetchAddresses.rejected, (state, action) => {
 				state.status = StatusTypes.failed;
-				state.error = action.error.message || 'Something went wrong';
+				state.error = action.payload as string;
 			})
 			// add addresses
 			.addCase(addAddress.pending, state => {
@@ -76,7 +116,7 @@ const addressSlice = createSlice({
 			)
 			.addCase(addAddress.rejected, (state, action) => {
 				state.status = StatusTypes.failed;
-				state.error = action.error.message || 'Failed to add address';
+				state.error = action.payload as string;
 			})
 			// update addresses
 			.addCase(updateAddress.pending, state => {
@@ -96,7 +136,7 @@ const addressSlice = createSlice({
 			)
 			.addCase(updateAddress.rejected, (state, action) => {
 				state.status = StatusTypes.failed;
-				state.error = action.error.message || 'Failed to update address';
+				state.error = action.payload as string;
 			})
 			// delete address
 			.addCase(deleteAddress.pending, state => {
@@ -113,7 +153,7 @@ const addressSlice = createSlice({
 			)
 			.addCase(deleteAddress.rejected, (state, action) => {
 				state.status = StatusTypes.failed;
-				state.error = action.error.message || 'Failed to delete address';
+				state.error = action.payload as string;
 			});
 	},
 });
