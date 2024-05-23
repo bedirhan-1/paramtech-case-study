@@ -1,12 +1,8 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
-const ArrowRight = (props: SvgProps) => (
-	<Svg
-		width={props.width ?? 16}
-		height={props.height ?? 16}
-		{...props}
-	>
+const SvgComponent = (props: SvgProps) => (
+	<Svg width={props.width ?? 16} height={props.height ?? 16} {...props}>
 		<Path
 			fill={props.color ?? 'black'}
 			fillRule="evenodd"
@@ -15,4 +11,4 @@ const ArrowRight = (props: SvgProps) => (
 		/>
 	</Svg>
 );
-export default ArrowRight;
+export default SvgComponent;

@@ -1,12 +1,8 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
-const Location = (props: SvgProps) => (
-	<Svg
-		width={props.width ?? 20}
-		height={props.height ?? 20}
-		{...props}
-	>
+const SvgComponent = (props: SvgProps) => (
+	<Svg width={props.width ?? 20} height={props.height ?? 20} {...props}>
 		<Path
 			fill={props.color ?? 'black'}
 			fillRule="evenodd"
@@ -15,4 +11,4 @@ const Location = (props: SvgProps) => (
 		/>
 	</Svg>
 );
-export default Location;
+export default SvgComponent;
