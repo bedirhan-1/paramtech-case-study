@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
 	Keyboard,
+	Platform,
 	StyleSheet,
+	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
 import { Button, ButtonTypes } from '../../components/Button';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -20,6 +21,8 @@ import {
 import { AddressInfo, IAddress } from '../../types/addressTypes';
 import { AddressForm } from './AddressForm';
 import { useTranslation } from 'react-i18next';
+import { KeyboardAccessoryView } from 'react-native-keyboard-accessory';
+import { ParamText } from '../../components/Text';
 
 export const AddNewAddress: React.FC = () => {
 	const navigation =
@@ -86,8 +89,7 @@ export const AddNewAddress: React.FC = () => {
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-			<SafeAreaView
-				edges={['bottom']}
+			<View
 				style={[
 					styles.container,
 					{ backgroundColor: ColorPallet.brand.background },
@@ -97,7 +99,10 @@ export const AddNewAddress: React.FC = () => {
 				<View
 					style={[
 						styles.footerContainer,
-						{ borderColor: ColorPallet.grayscale.lightGrey },
+						{
+							borderColor: ColorPallet.grayscale.lightGrey,
+							marginBottom: Platform.OS === 'ios' ? 30 : 0,
+						},
 					]}
 				>
 					<Button
@@ -107,7 +112,30 @@ export const AddNewAddress: React.FC = () => {
 						disabled={isDisabled || status === 'loading'}
 					/>
 				</View>
-			</SafeAreaView>
+				{Platform.OS == 'ios' && (
+					<KeyboardAccessoryView
+						style={[
+							styles.keyboardButtonContainer,
+							{
+								borderColor: ColorPallet.grayscale.semiLightGrey,
+								backgroundColor: ColorPallet.brand.background,
+							},
+						]}
+					>
+						<TouchableOpacity
+							onPress={() => Keyboard.dismiss()}
+							style={styles.doneButton}
+						>
+							<ParamText
+								fontType={'bold14'}
+								style={{ color: ColorPallet.brand.primaryText }}
+							>
+								{t('Global.done')}
+							</ParamText>
+						</TouchableOpacity>
+					</KeyboardAccessoryView>
+				)}
+			</View>
 		</TouchableWithoutFeedback>
 	);
 };
@@ -123,5 +151,12 @@ const styles = StyleSheet.create({
 	footerContainer: {
 		borderTopWidth: 1,
 		padding: 20,
+	},
+	keyboardButtonContainer: {
+		borderTopWidth: 1,
+	},
+	doneButton: {
+		padding: 10,
+		alignSelf: 'flex-end',
 	},
 });
