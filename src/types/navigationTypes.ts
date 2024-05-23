@@ -1,9 +1,9 @@
 import { IAddress } from './addressTypes';
 
 export enum StackScreens {
-	addressList = 'Adreslerim',
-	addNewAddress = 'Add New Address',
-	splash = 'Splash Screen',
+	addressList = 'addresses',
+	addNewAddress = 'addNewAddress',
+	splash = 'splashScreen',
 }
 
 export type RootStackParamList = {
