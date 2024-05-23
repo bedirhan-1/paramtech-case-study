@@ -8,4 +8,7 @@ export type Api = {
 		update: (address: IAddress) => Promise<AxiosResponse<IAddress>>;
 		delete: (id: string) => Promise<AxiosResponse<IAddress>>;
 	};
+	city: {
+		getAll: () => Promise<AxiosResponse<IAddress[]>>;
+	};
 };
