@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import {
 	Keyboard,
 	Platform,
@@ -11,11 +17,12 @@ import { Button, ButtonTypes } from '../../components/Button';
 import { useTheme } from '../../hooks/useTheme';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList, StackScreens } from '../../types/navigationTypes';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootState, AppDispatch } from '../../store/store';
+import { RootStackParamList, StackScreens } from '../../types/navigationTypes';
+import { AppDispatch, RootState } from '../../store/store';
 import {
 	addAddress,
+	deleteAddress,
 	updateAddress,
 } from '../../store/features/address/addressSlice';
 import { AddressInfo, IAddress } from '../../types/addressTypes';
@@ -23,6 +30,9 @@ import { AddressForm } from './AddressForm';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAccessoryView } from 'react-native-keyboard-accessory';
 import { ParamText } from '../../components/Text';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { ContentType, SheetContent } from './SheetContent';
+import { StatusTypes } from '../../types/addressSliceTypes';
 
 export const AddNewAddress: React.FC = () => {
 	const navigation =
@@ -32,14 +42,13 @@ export const AddNewAddress: React.FC = () => {
 	const { params } =
 		useRoute<RouteProp<RootStackParamList, StackScreens.addNewAddress>>();
 	const { passedAddress } = params ?? {};
+	const [actionType, setActionType] = useState<ContentType>();
 	const { ColorPallet } = useTheme();
 	const { t } = useTranslation();
 	const { status } = useSelector((state: RootState) => state.address);
 	const dispatch = useDispatch<AppDispatch>();
-	const buttonTitle = params?.passedAddress
-		? t('Global.update')
-		: t('Global.save');
-
+	const bottomSheetRef = useRef<BottomSheet>(null);
+	const [componentDidFinish, setComponentDidFinish] = useState(false);
 	const [address, setAddress] = useState<IAddress>({
 		[AddressInfo.AddressTitle]: passedAddress?.addressTitle ?? '',
 		[AddressInfo.City]: passedAddress?.city ?? '',
@@ -48,6 +57,7 @@ export const AddNewAddress: React.FC = () => {
 		id: params?.passedAddress?.id ?? '',
 	});
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
+	const snapPoints = useMemo(() => ['30%'], []);
 
 	const handleChange = useCallback((field: AddressInfo, value: string) => {
 		setAddress((prevState: IAddress) => ({
@@ -57,13 +67,38 @@ export const AddNewAddress: React.FC = () => {
 	}, []);
 
 	const handleSubmit = async () => {
-		dispatch(
-			params?.passedAddress ? updateAddress(address) : addAddress(address),
-		);
-		setTimeout(() => {
-			navigation.goBack();
-		}, 5000);
+		if (params?.passedAddress) {
+			setActionType(ContentType.update);
+			dispatch(updateAddress(address));
+		} else {
+			if (actionType === ContentType.delete) {
+				dispatch(deleteAddress(address.id));
+			} else {
+				setActionType(ContentType.create);
+				dispatch(addAddress(address));
+			}
+		}
+		setComponentDidFinish(true);
 	};
+
+	const handleDelete = async () => {
+		await dispatch(deleteAddress(address.id));
+		setActionType(ContentType.delete);
+		setComponentDidFinish(true);
+	};
+
+	const handleSheetChanges = useCallback((index: number) => {
+		console.log('handleSheetChanges', index);
+	}, []);
+
+	useEffect(() => {
+		if (componentDidFinish && status === StatusTypes.succeeded) {
+			bottomSheetRef.current?.expand();
+			setTimeout(() => {
+				navigation.goBack();
+			}, 5000);
+		}
+	}, [componentDidFinish, status, navigation]);
 
 	useEffect(() => {
 		const isFormEmpty =
@@ -71,7 +106,6 @@ export const AddNewAddress: React.FC = () => {
 			!address[AddressInfo.City] ||
 			!address[AddressInfo.District] ||
 			!address[AddressInfo.AddressDetails];
-
 		if (!params?.passedAddress) {
 			setIsDisabled(isFormEmpty);
 		} else {
@@ -82,10 +116,9 @@ export const AddNewAddress: React.FC = () => {
 				address[AddressInfo.District] === params.passedAddress.district &&
 				address[AddressInfo.AddressDetails] ===
 					params.passedAddress.addressDetails;
-
 			setIsDisabled(isFormEmpty || isFormUnchanged);
 		}
-	}, [address, params, passedAddress]);
+	}, [address, params]);
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -105,14 +138,24 @@ export const AddNewAddress: React.FC = () => {
 						},
 					]}
 				>
+					{params?.passedAddress && (
+						<Button
+							title={t('Global.delete')}
+							type={ButtonTypes.primary}
+							onPress={handleDelete}
+							style={styles.deleteButton}
+						/>
+					)}
 					<Button
-						title={buttonTitle}
+						title={
+							params?.passedAddress ? t('Global.update') : t('Global.save')
+						}
 						type={ButtonTypes.primary}
 						onPress={handleSubmit}
 						disabled={isDisabled || status === 'loading'}
 					/>
 				</View>
-				{Platform.OS == 'ios' && (
+				{Platform.OS === 'ios' && (
 					<KeyboardAccessoryView
 						style={[
 							styles.keyboardButtonContainer,
@@ -127,7 +170,7 @@ export const AddNewAddress: React.FC = () => {
 							style={styles.doneButton}
 						>
 							<ParamText
-								fontType={'bold14'}
+								fontType="bold14"
 								style={{ color: ColorPallet.brand.primaryText }}
 							>
 								{t('Global.done')}
@@ -135,6 +178,18 @@ export const AddNewAddress: React.FC = () => {
 						</TouchableOpacity>
 					</KeyboardAccessoryView>
 				)}
+				{componentDidFinish && <View style={styles.overlay} />}
+				<BottomSheet
+					snapPoints={snapPoints}
+					ref={bottomSheetRef}
+					onChange={handleSheetChanges}
+					index={-1}
+					handleIndicatorStyle={{
+						backgroundColor: ColorPallet.grayscale.lightGrey,
+					}}
+				>
+					<SheetContent contentType={actionType} />
+				</BottomSheet>
 			</View>
 		</TouchableWithoutFeedback>
 	);
@@ -144,9 +199,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
-	},
-	flex: {
-		flex: 1,
 	},
 	footerContainer: {
 		borderTopWidth: 1,
@@ -158,5 +210,16 @@ const styles = StyleSheet.create({
 	doneButton: {
 		padding: 10,
 		alignSelf: 'flex-end',
+	},
+	deleteButton: {
+		marginBottom: 10,
+	},
+	overlay: {
+		position: 'absolute',
+		height: '100%',
+		width: '100%',
+		left: 0,
+		top: 0,
+		backgroundColor: 'rgba(0, 0, 0, 0.5)',
 	},
 });
