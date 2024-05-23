@@ -2,31 +2,44 @@ import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList, StackScreens } from '../../types/navigationTypes';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { AppDispatch, RootState } from '../../store/store';
+import { AppDispatch } from '../../store/store';
 import { fetchAddresses } from '../../store/features/address/addressSlice';
 import { ParamText } from '../../components/Text';
 import { useTheme } from '../../hooks/useTheme';
+import * as Font from 'expo-font';
 
-export const Splash = () => {
+export const Splash: React.FC = () => {
 	const { ColorPallet } = useTheme();
-	const { replace } =
+	const navigation =
 		useNavigation<
-			StackNavigationProp<RootStackParamList, StackScreens.addNewAddress>
+			StackNavigationProp<RootStackParamList, StackScreens.splash>
 		>();
 	const dispatch = useDispatch<AppDispatch>();
-	const { status } = useSelector((state: RootState) => state.address);
 
 	useEffect(() => {
-		setTimeout(() => {
-			if (status === 'idle') {
-				dispatch(fetchAddresses());
-			} else if (status === 'succeeded') {
-				replace(StackScreens.addressList);
+		const prepareApp = async () => {
+			try {
+				await Font.loadAsync({
+					poppinsBlack: require('../../../assets/Fonts/Poppins-Black.ttf'),
+					poppinsBold: require('../../../assets/Fonts/Poppins-Bold.ttf'),
+					poppinsRegular: require('../../../assets/Fonts/Poppins-Regular.ttf'),
+					poppinsSemiBold: require('../../../assets/Fonts/Poppins-SemiBold.ttf'),
+					poppinsLight: require('../../../assets/Fonts/Poppins-Light.ttf'),
+					poppinsExtraLight: require('../../../assets/Fonts/Poppins-ExtraLight.ttf'),
+					poppinsExtraBold: require('../../../assets/Fonts/Poppins-ExtraBold.ttf'),
+					poppinsMedium: require('../../../assets/Fonts/Poppins-Medium.ttf'),
+				});
+				await dispatch(fetchAddresses()).unwrap();
+				navigation.replace(StackScreens.addressList);
+			} catch (e) {
+				console.warn(e);
 			}
-		}, 1500);
-	}, [status]);
+		};
+
+		prepareApp();
+	}, [dispatch, navigation]);
 
 	return (
 		<View style={styles.container}>
@@ -49,7 +62,7 @@ const styles = StyleSheet.create({
 	},
 	logo: {
 		width: Dimensions.get('window').width - 80,
-		objectFit: 'contain',
+		resizeMode: 'contain',
 		alignSelf: 'center',
 	},
 });

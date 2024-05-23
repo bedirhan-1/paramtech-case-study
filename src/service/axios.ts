@@ -10,45 +10,36 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-	config => {
-		return config;
-	},
+	config => config,
 	error => {
-		// if an error occurred while request
 		errorHandler(error);
 		return Promise.reject(error);
 	},
 );
 
 axiosInstance.interceptors.response.use(
-	response => {
-		// Response OK (2xx)
-		return response;
-	},
+	response => response,
 	error => {
-		// If an error occured
 		errorHandler(error);
 		return Promise.reject(error);
 	},
 );
 
 const errorHandler = (error: {
-	response: { data: { message: any } };
-	request: any;
-	message: any;
+	response?: { data?: { message?: string } };
+	request?: any;
+	message?: string;
 }) => {
-	if (error.response) {
-		if (error.response.data) {
-			if (typeof error.response.data === 'string') {
-				ErrorAlert(error.response.data);
-			} else {
-				ErrorAlert(error.response.data?.message || 'An error occurred.');
-			}
-		}
+	if (error.response && error.response.data) {
+		const errorMessage =
+			typeof error.response.data === 'string'
+				? error.response.data
+				: error.response.data.message;
+		ErrorAlert(errorMessage || 'An error occurred.');
 	} else if (error.request) {
 		ErrorAlert('No response received from the server.');
 	} else {
-		ErrorAlert(error.message);
+		ErrorAlert(error.message || 'An unknown error occurred.');
 	}
 };
 

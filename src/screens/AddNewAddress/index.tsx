@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
 	Keyboard,
 	KeyboardAvoidingView,
@@ -21,9 +21,10 @@ import {
 	updateAddress,
 } from '../../store/features/address/addressSlice';
 import { AddressInfo, IAddress } from '../../types/addressTypes';
+import { AddressForm } from './AddressForm';
 
 export const AddNewAddress: React.FC = () => {
-	const { goBack } =
+	const navigation =
 		useNavigation<
 			StackNavigationProp<RootStackParamList, StackScreens.addNewAddress>
 		>();
@@ -34,37 +35,55 @@ export const AddNewAddress: React.FC = () => {
 	const { status } = useSelector((state: RootState) => state.address);
 	const dispatch = useDispatch<AppDispatch>();
 
+	const [buttonTitle, setButtonTitle] = useState(
+		params?.passedAddress ? 'Güncelle' : 'Kaydet',
+	);
 	const [address, setAddress] = useState<IAddress>({
 		[AddressInfo.AddressTitle]: passedAddress?.addressTitle ?? '',
 		[AddressInfo.City]: passedAddress?.city ?? '',
 		[AddressInfo.District]: passedAddress?.district ?? '',
 		[AddressInfo.AddressDetails]: passedAddress?.addressDetails ?? '',
-		id: params?.passedAddress.id ?? '',
+		id: params?.passedAddress?.id ?? '',
 	});
+	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
-	const [isDisabled, setIsDisabled] = useState(true);
-
-	const handleChange = (field: AddressInfo) => (value: string) => {
-		setAddress((prevState: IAddress) => ({ ...prevState, [field]: value }));
-	};
+	const handleChange = useCallback((field: AddressInfo, value: string) => {
+		setAddress((prevState: IAddress) => ({
+			...prevState,
+			[field]: value,
+		}));
+	}, []);
 
 	const handleSubmit = async () => {
 		dispatch(
 			params?.passedAddress ? updateAddress(address) : addAddress(address),
 		);
 		setTimeout(() => {
-			goBack();
+			navigation.goBack();
 		}, 5000);
 	};
 
 	useEffect(() => {
-		const isButtonDisabled =
+		const isFormEmpty =
 			!address[AddressInfo.AddressTitle] ||
 			!address[AddressInfo.City] ||
 			!address[AddressInfo.District] ||
 			!address[AddressInfo.AddressDetails];
-		setIsDisabled(isButtonDisabled);
+		setIsDisabled(isFormEmpty);
 	}, [address]);
+
+	useEffect(() => {
+		if (params?.passedAddress) {
+			const isFormUnchanged =
+				address[AddressInfo.AddressTitle] ===
+					params.passedAddress.addressTitle &&
+				address[AddressInfo.City] === params.passedAddress.city &&
+				address[AddressInfo.District] === params.passedAddress.district &&
+				address[AddressInfo.AddressDetails] ===
+					params.passedAddress.addressDetails;
+			setIsDisabled(isFormUnchanged);
+		}
+	}, [address, params, passedAddress]);
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -76,32 +95,7 @@ export const AddNewAddress: React.FC = () => {
 				]}
 			>
 				<SafeAreaView edges={['bottom']} style={styles.flex}>
-					<View style={styles.innerContainer}>
-						<ParamInput
-							placeholder="Adres başlığı (Ev, işyeri vs.)"
-							style={styles.input}
-							value={address[AddressInfo.AddressTitle]}
-							onChangeText={handleChange(AddressInfo.AddressTitle)}
-						/>
-						<ParamInput
-							placeholder="İl"
-							style={styles.input}
-							value={address[AddressInfo.City]}
-							onChangeText={handleChange(AddressInfo.City)}
-						/>
-						<ParamInput
-							placeholder="İlçe"
-							style={styles.input}
-							value={address[AddressInfo.District]}
-							onChangeText={handleChange(AddressInfo.District)}
-						/>
-						<ParamInput
-							placeholder="Adres Detayı"
-							style={styles.input}
-							value={address[AddressInfo.AddressDetails]}
-							onChangeText={handleChange(AddressInfo.AddressDetails)}
-						/>
-					</View>
+					<AddressForm address={address} onChange={handleChange} />
 					<View
 						style={[
 							styles.footerContainer,
@@ -109,7 +103,7 @@ export const AddNewAddress: React.FC = () => {
 						]}
 					>
 						<Button
-							title="Kaydet"
+							title={buttonTitle}
 							type={ButtonTypes.primary}
 							onPress={handleSubmit}
 							disabled={isDisabled || status === 'loading'}
@@ -128,13 +122,6 @@ const styles = StyleSheet.create({
 	},
 	flex: {
 		flex: 1,
-	},
-	innerContainer: {
-		flex: 1,
-		padding: 20,
-	},
-	input: {
-		marginBottom: 10,
 	},
 	footerContainer: {
 		borderTopWidth: 1,
