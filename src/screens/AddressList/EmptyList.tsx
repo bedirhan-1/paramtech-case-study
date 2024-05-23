@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ParamText } from '../../components/Text';
 import Location from '../../../assets/Icons/location';
 import { useTheme } from '../../hooks/useTheme';
@@ -24,7 +24,7 @@ export const EmptyList: React.FC = () => {
 
 const styles = StyleSheet.create({
 	emptyListContainer: {
-		paddingVertical: Dimensions.get('window').width * 0.3,
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 });
