@@ -6,9 +6,11 @@ import { Header } from '../components/Navigator/Header';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Splash } from '../screens/Splash';
 import { NavigationContainer } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const RootNavigation = () => {
 	const Stack = createStackNavigator<RootStackParamList>();
+	const {t} = useTranslation();
 
 	return (
 		<NavigationContainer>
@@ -27,12 +29,12 @@ const RootNavigation = () => {
 					<Stack.Screen
 						name={StackScreens.addressList}
 						component={AddressList}
-						options={{ title: 'Adres Bilgilerin', headerTitle: 'Adreslerim' }}
+						options={{ title: t('Navigation.your-address-info'), headerTitle: t('Navigation.my-addresses') }}
 					/>
 					<Stack.Screen
 						name={StackScreens.addNewAddress}
 						component={AddNewAddress}
-						options={{ title: 'Adres Bilgilerin', headerTitle: 'Adreslerim' }}
+						options={{ title: t('Navigation.your-address-info'), headerTitle: t('Navigation.my-addresses') }}
 					/>
 				</Stack.Navigator>
 			</SafeAreaProvider>

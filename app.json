@@ -27,9 +27,12 @@
       [
         "expo-font",
         {
-          "fonts": ["path/to/file.ttf"]
+          "fonts": [
+            "path/to/file.ttf"
+          ]
         }
-      ]
+      ],
+      "expo-localization"
     ]
   }
 }

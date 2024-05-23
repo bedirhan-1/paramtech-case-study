@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
 	Keyboard,
-	KeyboardAvoidingView,
-	Platform,
 	StyleSheet,
 	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
-import { ParamInput } from '../../components/Input';
 import { Button, ButtonTypes } from '../../components/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
@@ -22,6 +19,7 @@ import {
 } from '../../store/features/address/addressSlice';
 import { AddressInfo, IAddress } from '../../types/addressTypes';
 import { AddressForm } from './AddressForm';
+import { useTranslation } from 'react-i18next';
 
 export const AddNewAddress: React.FC = () => {
 	const navigation =
@@ -32,12 +30,13 @@ export const AddNewAddress: React.FC = () => {
 		useRoute<RouteProp<RootStackParamList, StackScreens.addNewAddress>>();
 	const { passedAddress } = params ?? {};
 	const { ColorPallet } = useTheme();
+	const { t } = useTranslation();
 	const { status } = useSelector((state: RootState) => state.address);
 	const dispatch = useDispatch<AppDispatch>();
+	const buttonTitle = params?.passedAddress
+		? t('Global.update')
+		: t('Global.save');
 
-	const [buttonTitle, setButtonTitle] = useState(
-		params?.passedAddress ? 'Güncelle' : 'Kaydet',
-	);
 	const [address, setAddress] = useState<IAddress>({
 		[AddressInfo.AddressTitle]: passedAddress?.addressTitle ?? '',
 		[AddressInfo.City]: passedAddress?.city ?? '',
@@ -69,11 +68,10 @@ export const AddNewAddress: React.FC = () => {
 			!address[AddressInfo.City] ||
 			!address[AddressInfo.District] ||
 			!address[AddressInfo.AddressDetails];
-		setIsDisabled(isFormEmpty);
-	}, [address]);
 
-	useEffect(() => {
-		if (params?.passedAddress) {
+		if (!params?.passedAddress) {
+			setIsDisabled(isFormEmpty);
+		} else {
 			const isFormUnchanged =
 				address[AddressInfo.AddressTitle] ===
 					params.passedAddress.addressTitle &&
@@ -81,36 +79,35 @@ export const AddNewAddress: React.FC = () => {
 				address[AddressInfo.District] === params.passedAddress.district &&
 				address[AddressInfo.AddressDetails] ===
 					params.passedAddress.addressDetails;
-			setIsDisabled(isFormUnchanged);
+
+			setIsDisabled(isFormEmpty || isFormUnchanged);
 		}
 	}, [address, params, passedAddress]);
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			<SafeAreaView
+				edges={['bottom']}
 				style={[
 					styles.container,
 					{ backgroundColor: ColorPallet.brand.background },
 				]}
 			>
-				<SafeAreaView edges={['bottom']} style={styles.flex}>
-					<AddressForm address={address} onChange={handleChange} />
-					<View
-						style={[
-							styles.footerContainer,
-							{ borderColor: ColorPallet.grayscale.lightGrey },
-						]}
-					>
-						<Button
-							title={buttonTitle}
-							type={ButtonTypes.primary}
-							onPress={handleSubmit}
-							disabled={isDisabled || status === 'loading'}
-						/>
-					</View>
-				</SafeAreaView>
-			</KeyboardAvoidingView>
+				<AddressForm address={address} onChange={handleChange} />
+				<View
+					style={[
+						styles.footerContainer,
+						{ borderColor: ColorPallet.grayscale.lightGrey },
+					]}
+				>
+					<Button
+						title={buttonTitle}
+						type={ButtonTypes.primary}
+						onPress={handleSubmit}
+						disabled={isDisabled || status === 'loading'}
+					/>
+				</View>
+			</SafeAreaView>
 		</TouchableWithoutFeedback>
 	);
 };
