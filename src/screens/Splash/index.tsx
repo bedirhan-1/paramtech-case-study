@@ -8,7 +8,7 @@ import { AppDispatch } from '../../store/store';
 import { fetchAddresses } from '../../store/features/address/addressSlice';
 import { ParamText } from '../../components/Text';
 import { useTheme } from '../../hooks/useTheme';
-import * as Font from 'expo-font';
+import { useTranslation } from 'react-i18next';
 
 export const Splash: React.FC = () => {
 	const { ColorPallet } = useTheme();
@@ -16,21 +16,12 @@ export const Splash: React.FC = () => {
 		useNavigation<
 			StackNavigationProp<RootStackParamList, StackScreens.splash>
 		>();
+	const { t } = useTranslation();
 	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		const prepareApp = async () => {
 			try {
-				await Font.loadAsync({
-					poppinsBlack: require('../../../assets/Fonts/Poppins-Black.ttf'),
-					poppinsBold: require('../../../assets/Fonts/Poppins-Bold.ttf'),
-					poppinsRegular: require('../../../assets/Fonts/Poppins-Regular.ttf'),
-					poppinsSemiBold: require('../../../assets/Fonts/Poppins-SemiBold.ttf'),
-					poppinsLight: require('../../../assets/Fonts/Poppins-Light.ttf'),
-					poppinsExtraLight: require('../../../assets/Fonts/Poppins-ExtraLight.ttf'),
-					poppinsExtraBold: require('../../../assets/Fonts/Poppins-ExtraBold.ttf'),
-					poppinsMedium: require('../../../assets/Fonts/Poppins-Medium.ttf'),
-				});
 				await dispatch(fetchAddresses()).unwrap();
 				navigation.replace(StackScreens.addressList);
 			} catch (e) {
@@ -46,8 +37,9 @@ export const Splash: React.FC = () => {
 			<StatusBar hidden />
 			<Image style={styles.logo} source={require('../../../assets/Logo.png')} />
 			<ParamText style={{ color: ColorPallet.brand.primary }}>
-				<ParamText fontType={'bold16'}>Ödeme yap </ParamText>
-				ya da <ParamText fontType={'bold16'}>ödeme al</ParamText>
+				<ParamText fontType={'bold16'}>{t("Global.pay")}</ParamText>
+				{t("Global.or")}
+				<ParamText fontType={'bold16'}>{t("Global.get-paid")}</ParamText>
 			</ParamText>
 		</View>
 	);
