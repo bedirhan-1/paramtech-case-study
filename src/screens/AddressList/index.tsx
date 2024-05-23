@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { IAddress } from '../../types/addressTypes';
 import { AddressItem } from './AddressItem';
 import { EmptyList } from './EmptyList';
+import { useTranslation } from 'react-i18next';
 
 const width = Dimensions.get('window').width;
 const containerPadding = 20;
@@ -23,6 +24,8 @@ export const AddressList: React.FC = () => {
 		useNavigation<
 			StackNavigationProp<RootStackParamList, StackScreens.addressList>
 		>();
+	const { t } = useTranslation()
+
 	const { ColorPallet, TextTheme } = useTheme();
 	const { addresses } = useSelector((state: RootState) => state.address);
 
@@ -42,7 +45,7 @@ export const AddressList: React.FC = () => {
 		>
 			<View style={styles.innerContainer}>
 				<ParamText style={[TextTheme.listTitle]} fontType={'medium14'}>
-					Kayıtlı Adresler
+					{t("Addresses.saved-addresses")}
 				</ParamText>
 				<FlatList
 					showsVerticalScrollIndicator={false}
@@ -76,7 +79,7 @@ export const AddressList: React.FC = () => {
 				]}
 			>
 				<Button
-					title={'Yeni Adres Ekle'}
+					title={t("Addresses.add-new-address")}
 					type={ButtonTypes.primary}
 					onPress={() => navigation.navigate(StackScreens.addNewAddress)}
 				/>

@@ -30,7 +30,6 @@ export const ParamInput: FC<Props> = ({
 	style,
 	placeholder,
 	error = false,
-	multipleSelect = false,
 	onChangeText,
 	value,
 }) => {
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		left: 20,
 		zIndex: -1,
-		fontFamily: 'regular',
+		fontFamily: 'poppinsRegular',
 		color: 'black',
 	},
 	contentContainer: {
