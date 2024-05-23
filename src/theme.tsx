@@ -1,16 +1,14 @@
 import { Platform, StyleSheet, TextStyle } from 'react-native';
 
-export const mediumOpacity = 0.5;
-export const activeOpacity = 0.7;
-export const heavyOpacity = 0.3;
-export const borderRadius = 16;
-
-const safeMarginTop = Platform.OS == 'ios' ? 60 : 40;
-const size = Platform.OS == 'ios' ? 6 : 4;
+const safeMarginTop: number = Platform.OS == 'ios' ? 60 : 40;
+const size: number = Platform.OS == 'ios' ? 6 : 4;
+const activeOpacity = 0.7;
 
 export interface IGrayscaleColors {
 	black: string;
+	darkGrey: string;
 	mediumGrey: string;
+	bone: string;
 	grey: string;
 	lightGrey: string;
 	semiLightGrey: string;
@@ -29,8 +27,10 @@ export interface IBrandColors {
 const GrayscaleColors = {
 	lightGrey: '#EEF0F4',
 	semiLightGrey: '#E6E9EE',
+	bone: '#FCFCFD',
 	grey: '#C2BBCF',
 	mediumGrey: 'rgb(144,154,164)',
+	darkGrey: '#7D8E9F',
 	white: '#FFFFFF',
 	black: '#000000',
 };
@@ -228,6 +228,13 @@ export const TextTheme = {
 		marginBottom: 10,
 		color: ColorPallet.brand.primaryText,
 	},
+	placeholder: {
+		color: ColorPallet.brand.secondaryText,
+		fontFamily: 'poppinsMedium',
+	},
+	selectedPlaceholder: {
+		color: ColorPallet.grayscale.darkGrey,
+	},
 };
 
 export interface IColorPallet {
@@ -236,26 +243,17 @@ export interface IColorPallet {
 }
 
 const Inputs = StyleSheet.create({
-	textInput: {
-		borderColor: ColorPallet.brand.secondary,
-		borderWidth: 2,
-		fontSize: 16,
-		borderRadius: borderRadius,
-		padding: 10,
+	primary: {
+		...TextTheme.placeholder,
+		backgroundColor: ColorPallet.grayscale.semiLightGrey,
 	},
-	inputSelected: {
-		borderColor: ColorPallet.brand.primary,
+	selectedPrimary: {
+		...TextTheme.selectedPlaceholder,
 	},
-	singleSelect: {
-		borderRadius: borderRadius * 2,
-		padding: 12,
-	},
-
-	singleSelectIcon: {
-		color: ColorPallet.grayscale.white,
-	},
-	checkBoxColor: {
-		color: ColorPallet.brand.primary,
+	border: {
+		backgroundColor: ColorPallet.grayscale.bone,
+		borderWidth: 1,
+		borderColor: ColorPallet.grayscale.semiLightGrey,
 	},
 });
 
@@ -293,23 +291,21 @@ export type Theme = {
 	BrandColors: typeof BrandColors;
 	Buttons: typeof Buttons;
 	ButtonText: typeof ButtonText;
-	heavyOpacity: typeof heavyOpacity;
-	activeOpacity: number;
 	safeMarginTop: number;
 	ColorPallet: typeof ColorPallet;
 	Inputs: typeof Inputs;
 	size: number;
 	FontTheme: typeof FontTheme;
 	TextTheme: typeof TextTheme;
+	activeOpacity: number;
 };
 
 export const theme: Theme = {
 	BrandColors,
-	activeOpacity,
 	safeMarginTop,
-	heavyOpacity,
 	ColorPallet,
 	FontTheme,
+	activeOpacity,
 	TextTheme,
 	Buttons,
 	ButtonText,
