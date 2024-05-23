@@ -5,7 +5,7 @@ import {
 	TextInputProps,
 	TextStyle,
 } from 'react-native';
-import { FC, useState } from 'react';
+import { FC, useEffect } from 'react';
 import Animated, {
 	interpolate,
 	interpolateColor,
@@ -18,20 +18,31 @@ import { useTheme } from '../../hooks/useTheme';
 
 type Props = TextInputProps & {
 	style?: StyleProp<TextStyle>;
-	error: boolean;
+	error?: boolean;
+	multipleSelect?: boolean;
+	onChangeText?: (text: string) => void;
+	value?: string;
 };
 
-const HEIGHT = 54;
+const HEIGHT = 60;
 
 export const ParamInput: FC<Props> = ({
 	style,
 	placeholder,
 	error = false,
+	multipleSelect = false,
+	onChangeText,
+	value,
 }) => {
-	const { ColorPallet } = useTheme();
-	const [value, setValue] = useState('');
+	const { Inputs } = useTheme();
 	const placeholderProgress = useSharedValue(0);
 	const offset = useSharedValue(0);
+
+	useEffect(() => {
+		if (value) {
+			placeholderProgress.value = 1;
+		}
+	}, [value]);
 
 	if (error) {
 		offset.value = withSequence(
@@ -52,6 +63,16 @@ export const ParamInput: FC<Props> = ({
 					),
 				},
 			],
+			fontSize: withTiming(
+				interpolate(placeholderProgress.value, [0, 1], [14, 11]),
+			),
+			color: withTiming(
+				interpolateColor(
+					placeholderProgress.value,
+					[0, 1],
+					[Inputs.primary.color, Inputs.selectedPrimary.color],
+				),
+			),
 		};
 	});
 
@@ -62,13 +83,6 @@ export const ParamInput: FC<Props> = ({
 				interpolate(placeholderProgress.value, [0, 1], [0, 20]),
 				{ duration: 300 },
 			),
-			borderColor: withTiming(
-				interpolateColor(
-					placeholderProgress.value,
-					[0, 1],
-					[ColorPallet.grayscale.lightGrey, ColorPallet.brand.primary],
-				),
-			),
 		};
 	});
 
@@ -77,39 +91,26 @@ export const ParamInput: FC<Props> = ({
 	};
 
 	const onBlur = () => {
-		if (value.length === 0) {
+		if (value?.length === 0) {
 			placeholderProgress.value = 0;
 		}
 	};
 
 	return (
-		<>
-			<Animated.View
-				style={[
-					styles.container,
-					style,
-					animatedContainerView,
-					{ backgroundColor: ColorPallet.grayscale.semiLightGrey },
-				]}
-			>
-				<TextInput
-					value={value}
-					onChangeText={setValue}
-					onFocus={onFocus}
-					onBlur={onBlur}
-					style={[styles.textInput]}
-				/>
-				<Animated.Text
-					style={[
-						styles.placeholder,
-						animatedPlaceholderStyle,
-						{ fontFamily: 'bold', letterSpacing: 1.5, opacity: 0.5 },
-					]}
-				>
-					{placeholder}
-				</Animated.Text>
-			</Animated.View>
-		</>
+		<Animated.View
+			style={[styles.container, style, animatedContainerView, Inputs.border]}
+		>
+			<TextInput
+				value={value}
+				onChangeText={onChangeText}
+				onFocus={onFocus}
+				onBlur={onBlur}
+				style={[styles.textInput]}
+			/>
+			<Animated.Text style={[styles.placeholder, animatedPlaceholderStyle]}>
+				{placeholder}
+			</Animated.Text>
+		</Animated.View>
 	);
 };
 
@@ -117,23 +118,24 @@ const styles = StyleSheet.create({
 	container: {
 		alignSelf: 'stretch',
 		height: HEIGHT,
-		borderWidth: 1,
 		borderRadius: 4,
 		justifyContent: 'center',
 	},
 	textInput: {
 		height: HEIGHT,
 		paddingLeft: 20,
-		fontSize: 16,
 		justifyContent: 'center',
 		color: 'black',
 	},
 	placeholder: {
-		fontSize: 14,
 		position: 'absolute',
 		left: 20,
 		zIndex: -1,
 		fontFamily: 'regular',
 		color: 'black',
+	},
+	contentContainer: {
+		flex: 1,
+		alignItems: 'center',
 	},
 });
