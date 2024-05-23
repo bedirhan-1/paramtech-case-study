@@ -3,7 +3,6 @@ import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
 import { ParamText } from '../../components/Text';
 import { Button, ButtonTypes } from '../../components/Button';
 import { useTheme } from '../../hooks/useTheme';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList, StackScreens } from '../../types/navigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -24,7 +23,7 @@ export const AddressList: React.FC = () => {
 		useNavigation<
 			StackNavigationProp<RootStackParamList, StackScreens.addressList>
 		>();
-	const { t } = useTranslation()
+	const { t } = useTranslation();
 
 	const { ColorPallet, TextTheme } = useTheme();
 	const { addresses } = useSelector((state: RootState) => state.address);
@@ -36,16 +35,15 @@ export const AddressList: React.FC = () => {
 	};
 
 	return (
-		<SafeAreaView
+		<View
 			style={[
 				styles.container,
 				{ backgroundColor: ColorPallet.brand.background },
 			]}
-			edges={['bottom']}
 		>
 			<View style={styles.innerContainer}>
 				<ParamText style={[TextTheme.listTitle]} fontType={'medium14'}>
-					{t("Addresses.saved-addresses")}
+					{t('Addresses.saved-addresses')}
 				</ParamText>
 				<FlatList
 					showsVerticalScrollIndicator={false}
@@ -65,11 +63,12 @@ export const AddressList: React.FC = () => {
 							]}
 						/>
 					)}
-					style={[styles.flex, { marginBottom: 10 }]}
-					contentContainerStyle={[
-						styles.contentContainer,
-						{ borderColor: ColorPallet.grayscale.lightGrey },
-					]}
+					style={{
+						borderWidth: 1,
+						marginBottom: 10,
+						borderColor: ColorPallet.grayscale.lightGrey,
+						borderRadius: 4,
+					}}
 				/>
 			</View>
 			<View
@@ -79,12 +78,12 @@ export const AddressList: React.FC = () => {
 				]}
 			>
 				<Button
-					title={t("Addresses.add-new-address")}
+					title={t('Addresses.add-new-address')}
 					type={ButtonTypes.primary}
 					onPress={() => navigation.navigate(StackScreens.addNewAddress)}
 				/>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 };
 
@@ -100,6 +99,7 @@ const styles = StyleSheet.create({
 	footerContainer: {
 		borderTopWidth: 1,
 		padding: 20,
+		marginBottom: 30,
 	},
 	flex: {
 		flex: 1,
@@ -108,9 +108,5 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingHorizontal: containerPadding,
 		paddingTop: 20,
-	},
-	contentContainer: {
-		borderWidth: 1,
-		borderRadius: 4,
 	},
 });

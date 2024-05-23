@@ -9,6 +9,9 @@ const api: Api = {
 		update: (body: IAddress) => httpClient.put(`addressList/${body.id}`, body),
 		delete: (id: string) => httpClient.delete(`addressList/${id}`),
 	},
+	city: {
+		getAll: () => httpClient.get('cities'),
+	},
 };
 
 export { api };
