@@ -1,0 +1,25 @@
+{
+  "Global": {
+    "pay": "Ödeme yap ",
+    "or": "veya ",
+    "get-paid": "ödeme al",
+    "save": "Kaydet",
+    "update": "Güncelle"
+  },
+  "Addresses": {
+    "saved-addresses": "Kayıtlı Adresler",
+    "add-new-address": "Yeni Adres Ekle"
+  },
+
+  "Add-Address": {
+    "address-title": "Adres başlığı (Ev, işyeri, vs.)",
+    "city" : "İl",
+    "district": "İlçe",
+    "address-details": "Adres detayı"
+  },
+
+  "Navigation": {
+    "my-addresses": "Adreslerim",
+    "your-address-info": "Adres Bilgilerin"
+  }
+}
