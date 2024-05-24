@@ -9,8 +9,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { IAddress } from '../../types/addressTypes';
-import { AddressItem } from './AddressItem';
-import { EmptyList } from './EmptyList';
+import { AddressItem } from './Items/AddressItem';
+import { EmptyList } from './Items/EmptyList';
 import { useTranslation } from 'react-i18next';
 
 const width = Dimensions.get('window').width;
