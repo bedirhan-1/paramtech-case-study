@@ -25,14 +25,17 @@ import {
 	deleteAddress,
 	updateAddress,
 } from '../../store/features/address/addressSlice';
-import { AddressInfo, IAddress } from '../../types/addressTypes';
+import { AddressInfo, City, IAddress } from '../../types/addressTypes';
 import { AddressForm } from './AddressForm';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAccessoryView } from 'react-native-keyboard-accessory';
 import { ParamText } from '../../components/Text';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { ContentType, SheetContent } from './SheetContent';
+import { ContentType, InfoSheet } from '../../components/Sheet/InfoSheet';
 import { StatusTypes } from '../../types/addressSliceTypes';
+import { api } from '../../service/service';
+import { AxiosResponse } from 'axios';
+import SelectSheet from '../../components/Sheet/SelectSheet';
 
 export const AddNewAddress: React.FC = () => {
 	const navigation =
@@ -42,83 +45,111 @@ export const AddNewAddress: React.FC = () => {
 	const { params } =
 		useRoute<RouteProp<RootStackParamList, StackScreens.addNewAddress>>();
 	const { passedAddress } = params ?? {};
-	const [actionType, setActionType] = useState<ContentType>();
 	const { ColorPallet } = useTheme();
 	const { t } = useTranslation();
 	const { status } = useSelector((state: RootState) => state.address);
 	const dispatch = useDispatch<AppDispatch>();
-	const bottomSheetRef = useRef<BottomSheet>(null);
-	const [componentDidFinish, setComponentDidFinish] = useState(false);
+	const alertSheetRef = useRef<BottomSheet>(null);
+	const citySheetRef = useRef<BottomSheet>(null);
+	const [currentAction, setCurrentAction] = useState<ContentType>();
+	const [isComponentFinished, setIsComponentFinished] = useState(false);
 	const [address, setAddress] = useState<IAddress>({
 		[AddressInfo.AddressTitle]: passedAddress?.addressTitle ?? '',
 		[AddressInfo.City]: passedAddress?.city ?? '',
 		[AddressInfo.District]: passedAddress?.district ?? '',
 		[AddressInfo.AddressDetails]: passedAddress?.addressDetails ?? '',
-		id: params?.passedAddress?.id ?? '',
+		id: passedAddress?.id ?? '',
 	});
-	const [isDisabled, setIsDisabled] = useState<boolean>(true);
-	const snapPoints = useMemo(() => ['30%'], []);
+	const [selectedCity, setSelectedCity] = useState<string>(address.city);
+	const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
+	const alertSnapPoints = useMemo(() => ['30%'], []);
+	const [cities, setCities] = useState<City[]>([]);
+	const [alertSheetStatus, setAlertSheetStatus] = useState(-1);
+	const [citySheetStatus, setCitySheetStatus] = useState(-1);
+	const [confirmationResponse, setConfirmationResponse] = useState<
+		boolean | null
+	>(null);
 
-	const handleChange = useCallback((field: AddressInfo, value: string) => {
+	useEffect(() => {
+		api.city
+			.getAll()
+			.then((res: AxiosResponse<City[], any>) => setCities(res.data))
+			.catch(error => console.error(error));
+	}, []);
+
+	const handleInputChange = useCallback((field: AddressInfo, value: string) => {
 		setAddress((prevState: IAddress) => ({
 			...prevState,
 			[field]: value,
 		}));
 	}, []);
 
+	const handleCitySelection = useCallback((city: City) => {
+		handleInputChange(AddressInfo.City, city.city);
+		setSelectedCity(prevCity => (prevCity === city.city ? '' : city.city));
+	}, []);
+
+	const handleCitySelect = () => {
+		citySheetRef.current?.close();
+	};
+
 	const handleSubmit = async () => {
 		if (params?.passedAddress) {
-			setActionType(ContentType.update);
+			setCurrentAction(ContentType.update);
 			dispatch(updateAddress(address));
 		} else {
-			if (actionType === ContentType.delete) {
-				dispatch(deleteAddress(address.id));
-			} else {
-				setActionType(ContentType.create);
-				dispatch(addAddress(address));
-			}
+			setCurrentAction(ContentType.create);
+			dispatch(addAddress(address));
 		}
-		setComponentDidFinish(true);
+		setIsComponentFinished(true);
 	};
 
 	const handleDelete = async () => {
-		await dispatch(deleteAddress(address.id));
-		setActionType(ContentType.delete);
-		setComponentDidFinish(true);
+		setCurrentAction(ContentType.alert);
+		setAlertSheetStatus(0);
 	};
 
-	const handleSheetChanges = useCallback((index: number) => {
-		console.log('handleSheetChanges', index);
-	}, []);
+	useEffect(() => {
+		if (confirmationResponse === true) {
+			dispatch(deleteAddress(address.id));
+			setCurrentAction(ContentType.delete);
+			setIsComponentFinished(true);
+			setConfirmationResponse(null); // Resetting the answer after deletion
+		} else if (confirmationResponse === false) {
+			setAlertSheetStatus(-1);
+			alertSheetRef.current?.close();
+			setConfirmationResponse(null); // Resetting the answer after closing
+		}
+	}, [confirmationResponse]);
 
 	useEffect(() => {
-		if (componentDidFinish && status === StatusTypes.succeeded) {
-			bottomSheetRef.current?.expand();
+		if (isComponentFinished && status === StatusTypes.succeeded) {
+			alertSheetRef.current?.expand();
 			setTimeout(() => {
 				navigation.goBack();
 			}, 5000);
 		}
-	}, [componentDidFinish, status, navigation]);
+	}, [isComponentFinished, status, navigation]);
 
 	useEffect(() => {
 		const isFormEmpty =
 			!address[AddressInfo.AddressTitle] ||
-			!address[AddressInfo.City] ||
+			!selectedCity ||
 			!address[AddressInfo.District] ||
 			!address[AddressInfo.AddressDetails];
 		if (!params?.passedAddress) {
-			setIsDisabled(isFormEmpty);
+			setIsSubmitDisabled(isFormEmpty);
 		} else {
 			const isFormUnchanged =
 				address[AddressInfo.AddressTitle] ===
 					params.passedAddress.addressTitle &&
-				address[AddressInfo.City] === params.passedAddress.city &&
+				selectedCity === params.passedAddress.city &&
 				address[AddressInfo.District] === params.passedAddress.district &&
 				address[AddressInfo.AddressDetails] ===
 					params.passedAddress.addressDetails;
-			setIsDisabled(isFormEmpty || isFormUnchanged);
+			setIsSubmitDisabled(isFormEmpty || isFormUnchanged);
 		}
-	}, [address, params]);
+	}, [address, selectedCity, params]);
 
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -128,7 +159,11 @@ export const AddNewAddress: React.FC = () => {
 					{ backgroundColor: ColorPallet.brand.background },
 				]}
 			>
-				<AddressForm address={address} onChange={handleChange} />
+				<AddressForm
+					address={address}
+					onChange={handleInputChange}
+					cityOnPress={() => citySheetRef.current?.expand()}
+				/>
 				<View
 					style={[
 						styles.footerContainer,
@@ -141,7 +176,7 @@ export const AddNewAddress: React.FC = () => {
 					{params?.passedAddress && (
 						<Button
 							title={t('Global.delete')}
-							type={ButtonTypes.primary}
+							type={ButtonTypes.Secondary}
 							onPress={handleDelete}
 							style={styles.deleteButton}
 						/>
@@ -150,9 +185,9 @@ export const AddNewAddress: React.FC = () => {
 						title={
 							params?.passedAddress ? t('Global.update') : t('Global.save')
 						}
-						type={ButtonTypes.primary}
+						type={ButtonTypes.Primary}
 						onPress={handleSubmit}
-						disabled={isDisabled || status === 'loading'}
+						disabled={isSubmitDisabled || status === 'loading'}
 					/>
 				</View>
 				{Platform.OS === 'ios' && (
@@ -178,17 +213,38 @@ export const AddNewAddress: React.FC = () => {
 						</TouchableOpacity>
 					</KeyboardAccessoryView>
 				)}
-				{componentDidFinish && <View style={styles.overlay} />}
+				{(alertSheetStatus === 0 || citySheetStatus === 0) && (
+					<View style={styles.overlay} />
+				)}
 				<BottomSheet
-					snapPoints={snapPoints}
-					ref={bottomSheetRef}
-					onChange={handleSheetChanges}
-					index={-1}
+					snapPoints={alertSnapPoints}
+					ref={alertSheetRef}
+					index={alertSheetStatus}
 					handleIndicatorStyle={{
 						backgroundColor: ColorPallet.grayscale.lightGrey,
 					}}
+					onChange={setAlertSheetStatus}
 				>
-					<SheetContent contentType={actionType} />
+					<InfoSheet
+						contentType={currentAction}
+						setAnswerYesOrNo={setConfirmationResponse}
+					/>
+				</BottomSheet>
+				<BottomSheet
+					snapPoints={['80%']}
+					index={citySheetStatus}
+					ref={citySheetRef}
+					handleIndicatorStyle={{
+						backgroundColor: ColorPallet.grayscale.lightGrey,
+					}}
+					onChange={setCitySheetStatus}
+				>
+					<SelectSheet
+						data={cities}
+						onPress={handleCitySelection}
+						onSelect={handleCitySelect}
+						selectedItem={selectedCity}
+					/>
 				</BottomSheet>
 			</View>
 		</TouchableWithoutFeedback>
