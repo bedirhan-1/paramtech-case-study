@@ -7,36 +7,40 @@ import { useTranslation } from 'react-i18next';
 interface AddressFormProps {
 	address: IAddress;
 	onChange: (field: AddressInfo, value: string) => void;
+	cityOnPress: () => void;
 }
 
 export const AddressForm: React.FC<AddressFormProps> = ({
 	address,
 	onChange,
+	cityOnPress,
 }) => {
-	const {t} = useTranslation();
-
+	const { t } = useTranslation();
 	return (
 		<View style={styles.innerContainer}>
 			<ParamInput
-				placeholder={t("Add-Address.address-title")}
+				maxLength={12}
+				placeholder={t('Add-Address.address-title')}
 				style={styles.input}
 				value={address[AddressInfo.AddressTitle]}
 				onChangeText={value => onChange(AddressInfo.AddressTitle, value)}
 			/>
 			<ParamInput
-				placeholder={t("Add-Address.city")}
+				placeholder={t('Add-Address.city')}
 				style={styles.input}
 				value={address[AddressInfo.City]}
+				multipleSelect={true}
+				onMultiSelect={cityOnPress}
 				onChangeText={value => onChange(AddressInfo.City, value)}
 			/>
 			<ParamInput
-				placeholder={t("Add-Address.district")}
+				placeholder={t('Add-Address.district')}
 				style={styles.input}
 				value={address[AddressInfo.District]}
 				onChangeText={value => onChange(AddressInfo.District, value)}
 			/>
 			<ParamInput
-				placeholder={t("Add-Address.address-details")}
+				placeholder={t('Add-Address.address-details')}
 				style={styles.input}
 				value={address[AddressInfo.AddressDetails]}
 				onChangeText={value => onChange(AddressInfo.AddressDetails, value)}
