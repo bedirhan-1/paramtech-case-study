@@ -42,7 +42,7 @@ export const ParamInput: FC<Props> = ({
 	onMultiSelect,
 	maxLength,
 }) => {
-	const { Inputs, activeOpacity } = useTheme();
+	const { Inputs } = useTheme();
 	const placeholderProgress = useSharedValue(0);
 	const offset = useSharedValue(0);
 
@@ -142,7 +142,7 @@ export const ParamInput: FC<Props> = ({
 					/>
 					<TouchableOpacity
 						onPress={onMultiSelect}
-						style={{ position: 'absolute', height: '100%', width: '100%' }}
+						style={styles.selectButton}
 					/>
 				</>
 			)}
@@ -179,5 +179,12 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		right: 16,
 		top: (HEIGHT - ICON_SIZE) / 2,
+	},
+	selectButton: {
+		position: 'absolute',
+		height: HEIGHT,
+		width: '100%',
+		left: 0,
+		top: 0,
 	},
 });

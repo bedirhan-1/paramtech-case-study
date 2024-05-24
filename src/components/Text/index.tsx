@@ -1,11 +1,6 @@
 import React, { ReactNode } from 'react';
-import {
-	StyleSheet,
-	Text as NativeText,
-	TextProps,
-	TextStyle,
-} from 'react-native';
-import { ColorPallet, FontStyleEnum, FontTheme } from '../../theme';
+import { StyleSheet, Text as NativeText, TextProps } from 'react-native';
+import { FontStyleEnum, FontTheme } from '../../theme';
 
 interface ParamTextType extends TextProps {
 	children: string | ReactNode | ReactNode[];
