@@ -1,81 +1,93 @@
 import { Platform, View, StyleSheet } from 'react-native';
 import { ParamText } from '../Text';
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-import CityItem from '../../screens/AddNewAddress/CityItem';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import CityItem from '../../screens/AddNewAddress/Items/CityItem';
 import { Button, ButtonTypes } from '../Button';
-import React from 'react';
+import React, { Dispatch, SetStateAction, forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks/useTheme';
 import { City } from '../../types/addressTypes';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 type SelectSheetProps = {
 	data: City[];
 	onSelect: () => void;
 	onPress: (city: City) => void;
 	selectedItem: string;
+	snapPoints: string[];
+	index: number;
+	onChange: Dispatch<SetStateAction<number>>;
 };
 
-const SelectSheet: React.FC<SelectSheetProps> = ({
-	data,
-	onSelect,
-	onPress,
-	selectedItem,
-}) => {
-	const { t } = useTranslation();
-	const { ColorPallet } = useTheme();
-	return (
-		<>
-			<View
-				style={{
-					borderBottomWidth: 1,
-					borderColor: ColorPallet.grayscale.semiLightGrey,
-				}}
+const SelectSheet = forwardRef<BottomSheetMethods, SelectSheetProps>(
+	(
+		{ data, onSelect, onPress, selectedItem, index, onChange, snapPoints },
+		ref,
+	) => {
+		const { t } = useTranslation();
+		const { ColorPallet } = useTheme();
+		return (
+			<BottomSheet
+				snapPoints={snapPoints}
+				index={index}
+				ref={ref}
+				onChange={onChange}
 			>
-				<ParamText
-					style={[styles.cityListHeader, { color: ColorPallet.brand.primary }]}
+				<View
+					style={{
+						borderBottomWidth: 1,
+						borderColor: ColorPallet.grayscale.semiLightGrey,
+					}}
 				>
-					{t('Add-Address.choose-city')}
-				</ParamText>
-			</View>
-			<BottomSheetFlatList
-				data={data}
-				keyExtractor={item => item.id.toString()}
-				renderItem={({ item }) => (
-					<CityItem
-						item={item}
-						onPress={onPress}
-						isSelected={item.city === selectedItem}
-					/>
-				)}
-				ItemSeparatorComponent={() => (
-					<View
+					<ParamText
 						style={[
-							styles.separator,
-							{ backgroundColor: ColorPallet.grayscale.semiLightGrey },
+							styles.cityListHeader,
+							{ color: ColorPallet.brand.primary },
 						]}
-					/>
-				)}
-				contentContainerStyle={styles.listContainer}
-			/>
-			<View
-				style={[
-					styles.footerContainer,
-					{
-						borderColor: ColorPallet.grayscale.lightGrey,
-						marginBottom: Platform.OS === 'ios' ? 30 : 0,
-					},
-				]}
-			>
-				<Button
-					title={t('Global.choose')}
-					type={ButtonTypes.Primary}
-					disabled={selectedItem === ''}
-					onPress={onSelect}
+					>
+						{t('Add-Address.choose-city')}
+					</ParamText>
+				</View>
+				<BottomSheetFlatList
+					data={data}
+					keyExtractor={item => item.id.toString()}
+					renderItem={({ item }) => (
+						<CityItem
+							item={item}
+							onPress={onPress}
+							isSelected={item.city === selectedItem}
+						/>
+					)}
+					ItemSeparatorComponent={() => (
+						<View
+							style={[
+								styles.separator,
+								{ backgroundColor: ColorPallet.grayscale.semiLightGrey },
+							]}
+						/>
+					)}
+					contentContainerStyle={styles.listContainer}
 				/>
-			</View>
-		</>
-	);
-};
+				<View
+					style={[
+						styles.footerContainer,
+						{
+							borderColor: ColorPallet.grayscale.lightGrey,
+							marginBottom: Platform.OS === 'ios' ? 30 : 0,
+						},
+					]}
+				>
+					<Button
+						title={t('Global.choose')}
+						type={ButtonTypes.Primary}
+						disabled={selectedItem === ''}
+						onPress={onSelect}
+					/>
+				</View>
+			</BottomSheet>
+		);
+	},
+);
 
 const styles = StyleSheet.create({
 	cityListHeader: {
