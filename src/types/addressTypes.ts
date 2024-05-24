@@ -15,3 +15,8 @@ export type CreatedAddress = {
 export type IAddress = {
 	id: string;
 } & CreatedAddress;
+
+export type City = {
+	city: string;
+	id: string;
+};
