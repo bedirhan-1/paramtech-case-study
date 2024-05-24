@@ -4,6 +4,7 @@ import {
 	TextInput,
 	TextInputProps,
 	TextStyle,
+	TouchableOpacity,
 } from 'react-native';
 import { FC, useEffect } from 'react';
 import Animated, {
@@ -15,16 +16,21 @@ import Animated, {
 	withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '../../hooks/useTheme';
+import ArrowDown from '../../../assets/Icons/arrowDown';
+import { ParamText } from '../Text';
 
 type Props = TextInputProps & {
 	style?: StyleProp<TextStyle>;
 	error?: boolean;
-	multipleSelect?: boolean;
 	onChangeText?: (text: string) => void;
 	value?: string;
+	multipleSelect?: boolean;
+	onMultiSelect?: () => void;
+	maxLength?: number;
 };
 
 const HEIGHT = 60;
+const ICON_SIZE = 16;
 
 export const ParamInput: FC<Props> = ({
 	style,
@@ -32,8 +38,11 @@ export const ParamInput: FC<Props> = ({
 	error = false,
 	onChangeText,
 	value,
+	multipleSelect = false,
+	onMultiSelect,
+	maxLength,
 }) => {
-	const { Inputs } = useTheme();
+	const { Inputs, activeOpacity } = useTheme();
 	const placeholderProgress = useSharedValue(0);
 	const offset = useSharedValue(0);
 
@@ -97,18 +106,46 @@ export const ParamInput: FC<Props> = ({
 
 	return (
 		<Animated.View
-			style={[styles.container, style, animatedContainerView, Inputs.border]}
+			style={[
+				styles.container,
+				style,
+				animatedContainerView,
+				Inputs.border,
+				{ zIndex: multipleSelect ? -1 : undefined },
+			]}
 		>
-			<TextInput
-				value={value}
-				onChangeText={onChangeText}
-				onFocus={onFocus}
-				onBlur={onBlur}
-				style={[styles.textInput]}
-			/>
+			{!multipleSelect && (
+				<TextInput
+					value={value}
+					onChangeText={onChangeText}
+					onFocus={onFocus}
+					onBlur={onBlur}
+					editable={!multipleSelect}
+					style={styles.textInput}
+					maxLength={maxLength}
+				/>
+			)}
+			{multipleSelect && (
+				<ParamText style={{ paddingLeft: 20 }} fontType={'regular14'}>
+					{value}
+				</ParamText>
+			)}
 			<Animated.Text style={[styles.placeholder, animatedPlaceholderStyle]}>
 				{placeholder}
 			</Animated.Text>
+			{multipleSelect && (
+				<>
+					<ArrowDown
+						style={styles.rightArrow}
+						width={ICON_SIZE}
+						height={ICON_SIZE}
+					/>
+					<TouchableOpacity
+						onPress={onMultiSelect}
+						style={{ position: 'absolute', height: '100%', width: '100%' }}
+					/>
+				</>
+			)}
 		</Animated.View>
 	);
 };
@@ -136,5 +173,11 @@ const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
 		alignItems: 'center',
+	},
+	rightArrow: {
+		position: 'absolute',
+		alignSelf: 'center',
+		right: 16,
+		top: (HEIGHT - ICON_SIZE) / 2,
 	},
 });
