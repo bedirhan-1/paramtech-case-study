@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { CreatedAddress, IAddress } from './addressTypes';
+import { City, CreatedAddress, IAddress } from './addressTypes';
 
 export type Api = {
 	address: {
@@ -9,6 +9,6 @@ export type Api = {
 		delete: (id: string) => Promise<AxiosResponse<IAddress>>;
 	};
 	city: {
-		getAll: () => Promise<AxiosResponse<IAddress[]>>;
+		getAll: () => Promise<AxiosResponse<City[]>>;
 	};
 };
