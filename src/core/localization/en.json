@@ -13,11 +13,11 @@
   },
   "Addresses": {
     "saved-addresses": "Saved Addresses",
-    "my-addresses": "My Addresses"
+    "add-new-address": "Add new address"
   },
   "Add-Address": {
     "address-title": "Address title (Home, workplace etc.)",
-    "city" : "City",
+    "city": "City",
     "district": "District",
     "address-details": "Address details",
     "add-success": "Your address has been created successfully!",
@@ -25,7 +25,6 @@
     "delete-success": "Your address has been deleted successfully!",
     "choose-city": "Choose City",
     "delete-are-you-sure": "Are you sure you want to delete the registered address?"
-
   },
   "Navigation": {
     "my-addresses": "My Addresses",
