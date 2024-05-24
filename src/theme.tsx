@@ -272,11 +272,27 @@ export const Buttons = {
 		borderRadius: size,
 		padding: size * 3,
 	},
+	secondary: {
+		backgroundColor: ColorPallet.grayscale.white,
+		borderRadius: size,
+		borderColor: ColorPallet.grayscale.semiLightGrey,
+		borderWidth: 1,
+		padding: size * 3,
+	},
+	secondaryDisabled: {
+		backgroundColor: ColorPallet.grayscale.white,
+		borderRadius: size,
+		borderColor: ColorPallet.grayscale.semiLightGrey,
+		borderWidth: 1,
+		padding: size * 3,
+	},
 };
 
 export interface IButtonText {
 	primaryText: TextStyle;
 	primaryDisabledText: TextStyle;
+	secondaryText: TextStyle;
+	secondaryDisabledText: TextStyle;
 }
 
 export const ButtonText: IButtonText = {
@@ -285,9 +301,16 @@ export const ButtonText: IButtonText = {
 		textAlign: 'center',
 	},
 	primaryDisabledText: {
-		fontFamily: 'poppinsMedium',
 		color: ColorPallet.grayscale.mediumGrey,
 		textAlign: 'center',
+	},
+	secondaryText: {
+		textAlign: 'center',
+		color: ColorPallet.brand.primaryDark,
+	},
+	secondaryDisabledText: {
+		textAlign: 'center',
+		color: ColorPallet.grayscale.mediumGrey,
 	},
 };
 

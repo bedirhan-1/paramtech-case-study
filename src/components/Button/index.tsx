@@ -4,7 +4,8 @@ import { useTheme } from '../../hooks/useTheme';
 import { ParamText } from '../Text';
 
 export enum ButtonTypes {
-	primary = 'Primary',
+	Primary = 'Primary',
+	Secondary = 'Secondary',
 }
 
 interface ButtonProps {
@@ -13,7 +14,7 @@ interface ButtonProps {
 	style?: any;
 	disabled?: boolean;
 	loading?: boolean;
-	onPress?: () => void;
+	onPress?: any;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -40,10 +41,26 @@ export const Button: React.FC<ButtonProps> = ({
 		primaryDisabledText: {
 			...ButtonText.primaryDisabledText,
 		},
+		secondary: {
+			...Buttons.secondary,
+		},
+		secondaryDisabled: {
+			...Buttons.secondaryDisabled,
+		},
+		secondaryText: {
+			...ButtonText.secondaryText,
+		},
+		secondaryDisabledText: {
+			...ButtonText.secondaryDisabledText,
+		},
 	});
 
 	const getButtonStyle = () => {
 		switch (type) {
+			case ButtonTypes.Secondary:
+				return disabled || loading
+					? styles.secondaryDisabled
+					: styles.secondary;
 			default:
 				return disabled || loading ? styles.primaryDisabled : styles.primary;
 		}
@@ -51,6 +68,10 @@ export const Button: React.FC<ButtonProps> = ({
 
 	const getButtonTextStyle = () => {
 		switch (type) {
+			case ButtonTypes.Secondary:
+				return disabled || loading
+					? styles.secondaryDisabledText
+					: styles.secondaryText;
 			default:
 				return disabled ? styles.primaryDisabledText : styles.primaryText;
 		}
