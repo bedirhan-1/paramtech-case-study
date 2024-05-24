@@ -1,11 +1,11 @@
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { ParamText } from '../../components/Text';
-import LocationFill from '../../../assets/Icons/locationFill';
-import ArrowRight from '../../../assets/Icons/arrowRight';
-import { useTheme } from '../../hooks/useTheme';
-import { capitalize, formatDistrictCity } from '../../utils/formatting';
-import { IAddress } from '../../types/addressTypes';
+import { ParamText } from '../../../components/Text';
+import LocationFill from '../../../../assets/Icons/locationFill';
+import ArrowRight from '../../../../assets/Icons/arrowRight';
+import { useTheme } from '../../../hooks/useTheme';
+import { capitalize, formatDistrictCity } from '../../../utils/formatting';
+import { IAddress } from '../../../types/addressTypes';
 
 interface AddressItemProps {
 	item: IAddress;

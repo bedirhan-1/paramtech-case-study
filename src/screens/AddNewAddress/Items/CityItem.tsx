@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import { City } from '../../types/addressTypes';
+import { City } from '../../../types/addressTypes';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { ParamText } from '../../components/Text';
-import Circle from '../../../assets/Icons/circle';
-import { ColorPallet } from '../../theme';
+import { ParamText } from '../../../components/Text';
+import Circle from '../../../../assets/Icons/circle';
+import { ColorPallet } from '../../../theme';
 
 const CityItem = memo(
 	({

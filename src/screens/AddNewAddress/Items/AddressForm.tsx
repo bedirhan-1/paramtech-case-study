@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ParamInput } from '../../components/Input';
-import { IAddress, AddressInfo } from '../../types/addressTypes';
+import { ParamInput } from '../../../components/Input';
+import { IAddress, AddressInfo } from '../../../types/addressTypes';
 import { useTranslation } from 'react-i18next';
 
 interface AddressFormProps {

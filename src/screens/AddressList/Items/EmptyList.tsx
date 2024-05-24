@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ParamText } from '../../components/Text';
-import Location from '../../../assets/Icons/location';
-import { useTheme } from '../../hooks/useTheme';
+import { ParamText } from '../../../components/Text';
+import Location from '../../../../assets/Icons/location';
+import { useTheme } from '../../../hooks/useTheme';
 
 export const EmptyList: React.FC = () => {
 	const { ColorPallet } = useTheme();
