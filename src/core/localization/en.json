@@ -6,7 +6,10 @@
     "save": "Save",
     "update": "Update",
     "done": "Done",
-    "delete": "Delete"
+    "delete": "Delete",
+    "choose": "Choose",
+    "yes": "Yes",
+    "no": "No"
   },
   "Addresses": {
     "saved-addresses": "Saved Addresses",
@@ -19,7 +22,10 @@
     "address-details": "Address details",
     "add-success": "Your address has been created successfully!",
     "update-success": "Your address has been updated successfully!",
-    "delete-success": "Your address has been deleted successfully!"
+    "delete-success": "Your address has been deleted successfully!",
+    "choose-city": "Choose City",
+    "delete-are-you-sure": "Are you sure you want to delete the registered address?"
+
   },
   "Navigation": {
     "my-addresses": "My Addresses",

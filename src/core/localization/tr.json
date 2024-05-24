@@ -6,7 +6,10 @@
     "save": "Kaydet",
     "update": "Güncelle",
     "done": "Bitti",
-    "delete": "Sil"
+    "delete": "Sil",
+    "choose": "Seç",
+    "yes": "Evet",
+    "no": "Hayır"
   },
   "Addresses": {
     "saved-addresses": "Kayıtlı Adresler",
@@ -19,7 +22,9 @@
     "address-details": "Adres detayı",
     "add-success": "Adresin başarıyla kaydedildi!",
     "update-success": "Adresin başarıyla güncellendi!",
-    "delete-success": "Adresin başarıyla silindi!"
+    "delete-success": "Adresin başarıyla silindi!",
+    "choose-city": "İl Seç",
+    "delete-are-you-sure": "Kayıtlı adresi silmek istediğinizden emin misiniz?"
   },
   "Navigation": {
     "my-addresses": "Adreslerim",
