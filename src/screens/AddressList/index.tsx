@@ -79,7 +79,7 @@ export const AddressList: React.FC = () => {
 			>
 				<Button
 					title={t('Addresses.add-new-address')}
-					type={ButtonTypes.primary}
+					type={ButtonTypes.Primary}
 					onPress={() => navigation.navigate(StackScreens.addNewAddress)}
 				/>
 			</View>
