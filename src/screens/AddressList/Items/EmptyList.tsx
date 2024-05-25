@@ -26,5 +26,6 @@ const styles = StyleSheet.create({
 	emptyListContainer: {
 		alignItems: 'center',
 		justifyContent: 'center',
+		paddingVertical: 60,
 	},
 });

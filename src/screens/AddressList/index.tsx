@@ -42,34 +42,35 @@ export const AddressList: React.FC = () => {
 			]}
 		>
 			<View style={styles.innerContainer}>
-				<ParamText style={[TextTheme.listTitle]} fontType={'medium14'}>
-					{t('Addresses.saved-addresses')}
-				</ParamText>
-				<FlatList
-					showsVerticalScrollIndicator={false}
-					data={addresses}
-					renderItem={({ item }) => (
-						<AddressItem item={item} onPress={() => handlePressed(item)} />
-					)}
-					scrollEnabled={addresses.length !== 0}
-					keyExtractor={(item, index) => item.id || index.toString()}
-					extraData={addresses.length}
-					ListEmptyComponent={EmptyList}
-					ItemSeparatorComponent={() => (
-						<View
-							style={[
-								styles.separator,
-								{ backgroundColor: ColorPallet.grayscale.lightGrey },
-							]}
-						/>
-					)}
-					style={{
-						borderWidth: 1,
-						marginBottom: 10,
-						borderColor: ColorPallet.grayscale.lightGrey,
-						borderRadius: 4,
-					}}
-				/>
+				<View>
+					<ParamText style={[TextTheme.listTitle]} fontType={'medium14'}>
+						{t('Addresses.saved-addresses')}
+					</ParamText>
+					<FlatList
+						data={addresses}
+						renderItem={({ item }) => (
+							<AddressItem item={item} onPress={() => handlePressed(item)} />
+						)}
+						scrollEnabled={addresses.length !== 0}
+						extraData={addresses.length}
+						ListEmptyComponent={EmptyList}
+						ItemSeparatorComponent={() => (
+							<View
+								style={[
+									styles.separator,
+									{ backgroundColor: ColorPallet.grayscale.lightGrey },
+								]}
+							/>
+						)}
+						style={{
+							flex: addresses.length ? 0 : undefined,
+							borderWidth: 1,
+							borderRadius: 8,
+							marginBottom: 10,
+							borderColor: ColorPallet.grayscale.lightGrey,
+						}}
+					/>
+				</View>
 			</View>
 			<View
 				style={[
@@ -105,8 +106,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	innerContainer: {
-		flex: 1,
 		paddingHorizontal: containerPadding,
 		paddingTop: 20,
+		justifyContent: 'space-between',
+		flex: 1,
 	},
 });
