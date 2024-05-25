@@ -1,14 +1,18 @@
-import SuccessCircleFill from '../../../assets/Icons/successCircleFill';
-import { ParamText } from '../Text';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import React, { Dispatch, SetStateAction, forwardRef } from 'react';
+import React, { Dispatch, SetStateAction, forwardRef, useEffect } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { RootState } from '../../store/store';
+import { StatusTypes } from '../../types/addressSliceTypes';
 import { useTheme } from '../../hooks/useTheme';
+import { Button, ButtonTypes } from '../Button';
+import SuccessCircleFill from '../../../assets/Icons/successCircleFill';
 import UpdateCircleFill from '../../../assets/Icons/updateCircleFill';
 import TrashIcon from '../../../assets/Icons/trashIcon';
-import { Button, ButtonTypes } from '../Button';
-import { StyleSheet, View } from 'react-native';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { ParamText } from '../Text';
+import Error from '../../../assets/Icons/error';
 
 export enum ContentType {
 	update = 'update',
@@ -29,6 +33,7 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 	({ contentType, setAnswerYesOrNo, onChange, index, snapPoints }, ref) => {
 		const { t } = useTranslation();
 		const { TextTheme, ColorPallet } = useTheme();
+		const { status, error } = useSelector((state: RootState) => state.address);
 
 		const renderIcon = () => {
 			switch (contentType) {
@@ -39,6 +44,8 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 				case ContentType.delete:
 					return <TrashIcon />;
 				case ContentType.alert:
+					return null;
+				default:
 					return null;
 			}
 		};
@@ -53,6 +60,8 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 					return t('Add-Address.delete-success');
 				case ContentType.alert:
 					return t('Add-Address.delete-are-you-sure');
+				default:
+					return '';
 			}
 		};
 
@@ -66,25 +75,48 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 				}}
 				onChange={onChange}
 			>
-				<BottomSheetView style={{ paddingTop: 32 }}>
-					<View style={styles.icon}>{renderIcon()}</View>
-					<ParamText style={TextTheme.bottomSheet}>{renderText()}</ParamText>
-					{contentType === ContentType.alert && (
-						<View style={styles.buttonContainer}>
-							<Button
-								style={styles.button}
-								title={t('Global.yes')}
-								type={ButtonTypes.Secondary}
-								onPress={() => setAnswerYesOrNo(true)}
-							/>
-							<Button
-								style={[styles.button, { marginLeft: 10 }]}
-								title={t('Global.no')}
-								type={ButtonTypes.Primary}
-								onPress={() => setAnswerYesOrNo(false)}
-							/>
-						</View>
-					)}
+				<BottomSheetView style={styles.bottomSheetView}>
+					{status === StatusTypes.loading ? (
+						<ActivityIndicator size="large" color={ColorPallet.brand.primary} />
+					) : status === StatusTypes.succeeded ? (
+						<BottomSheetView style={styles.contentContainer}>
+							<View style={styles.icon}>{renderIcon()}</View>
+							<ParamText style={TextTheme.bottomSheet}>
+								{renderText()}
+							</ParamText>
+							{contentType === ContentType.alert && (
+								<View style={styles.buttonContainer}>
+									<Button
+										style={styles.button}
+										title={t('Global.yes')}
+										type={ButtonTypes.Secondary}
+										onPress={() => setAnswerYesOrNo(true)}
+									/>
+									<Button
+										style={[styles.button, { marginLeft: 10 }]}
+										title={t('Global.no')}
+										type={ButtonTypes.Primary}
+										onPress={() => setAnswerYesOrNo(false)}
+									/>
+								</View>
+							)}
+						</BottomSheetView>
+					) : StatusTypes.failed ? (
+						<BottomSheetView>
+							<View style={styles.icon}>
+								<Error fill={ColorPallet.brand.error} />
+							</View>
+							<ParamText>{error ? t(error) : t('Error.occured')}</ParamText>
+							<View style={styles.buttonContainer}>
+								<Button
+									style={styles.button}
+									title={t('Global.ok')}
+									type={ButtonTypes.Secondary}
+									onPress={() => setAnswerYesOrNo(false)}
+								/>
+							</View>
+						</BottomSheetView>
+					) : null}
 				</BottomSheetView>
 			</BottomSheet>
 		);
@@ -92,14 +124,22 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 );
 
 const styles = StyleSheet.create({
+	bottomSheetView: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	contentContainer: {
+		paddingTop: 32,
+	},
+	icon: {
+		alignItems: 'center',
+	},
 	buttonContainer: {
 		padding: 20,
 		flexDirection: 'row',
 	},
 	button: {
 		flex: 1,
-	},
-	icon: {
-		alignItems: 'center',
 	},
 });

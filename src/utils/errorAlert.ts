@@ -1,10 +1,14 @@
 import { Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export const ErrorAlert = (
 	message: string = 'Something went wrong',
 	title: string = 'Error',
+	text: string = 'OK',
 ) => {
-	Alert.alert(title, message, [
-		{ text: 'OK', onPress: () => console.log('OK Pressed') },
+	const { t } = useTranslation();
+	
+	Alert.alert(t(title), t(message), [
+		{ text: t(text), onPress: () => console.log('OK Pressed') },
 	]);
 };

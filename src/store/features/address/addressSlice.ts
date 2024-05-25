@@ -16,9 +16,7 @@ export const fetchAddresses = createAsyncThunk<
 		const response = await api.address.getAll();
 		return response.data;
 	} catch (error: any) {
-		return rejectWithValue(
-			error.response?.data?.message || 'Failed to fetch addresses',
-		);
+		return rejectWithValue(error.response?.data?.message || 'Error.not-found');
 	}
 });
 
@@ -34,7 +32,7 @@ export const addAddress = createAsyncThunk<
 			return response.data as IAddress;
 		} catch (error: any) {
 			return rejectWithValue(
-				error.response?.data?.message || 'Failed to add address',
+				error.response?.data?.message || 'Error.add-address',
 			);
 		}
 	},
@@ -52,7 +50,7 @@ export const updateAddress = createAsyncThunk<
 			return response.data;
 		} catch (error: any) {
 			return rejectWithValue(
-				error.response?.data?.message || 'Failed to update address',
+				error.response?.data?.message || 'Error.update-address',
 			);
 		}
 	},
@@ -70,7 +68,7 @@ export const deleteAddress = createAsyncThunk<
 			return deletedAddressId;
 		} catch (error: any) {
 			return rejectWithValue(
-				error.response?.data?.message || 'Failed to delete address',
+				error.response?.data?.message || 'Error.delete-address',
 			);
 		}
 	},
@@ -91,6 +89,7 @@ const addressSlice = createSlice({
 			// fetchAddresses
 			.addCase(fetchAddresses.pending, state => {
 				state.status = StatusTypes.loading;
+				state.error = '';
 			})
 			.addCase(
 				fetchAddresses.fulfilled,
@@ -106,6 +105,7 @@ const addressSlice = createSlice({
 			// add addresses
 			.addCase(addAddress.pending, state => {
 				state.status = StatusTypes.loading;
+				state.error = '';
 			})
 			.addCase(
 				addAddress.fulfilled,
@@ -121,6 +121,7 @@ const addressSlice = createSlice({
 			// update addresses
 			.addCase(updateAddress.pending, state => {
 				state.status = StatusTypes.loading;
+				state.error = '';
 			})
 			.addCase(
 				updateAddress.fulfilled,
