@@ -9,11 +9,14 @@
     "delete": "Delete",
     "choose": "Choose",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "ok": "OK",
+    "error": "Error!"
   },
   "Addresses": {
     "saved-addresses": "Saved Addresses",
-    "add-new-address": "Add new address"
+    "add-new-address": "Add new address",
+    "empty-list": "Henüz hiç adresiniz yok"
   },
   "Add-Address": {
     "address-title": "Address title (Home, workplace etc.)",
@@ -29,5 +32,12 @@
   "Navigation": {
     "my-addresses": "My Addresses",
     "your-address-info": "Your Address Information"
+  },
+  "Error": {
+    "not-found": "Addresses not found. You may be experiencing an internet issue. Please try again later.",
+    "add-address": "An error occurred while adding the address.",
+    "update-address": "An error occurred while updating the address.",
+    "delete-address": "An error occurred while deleting the address.",
+    "occured": "An unexpected error occurred."
   }
 }

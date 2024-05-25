@@ -9,15 +9,18 @@
     "delete": "Sil",
     "choose": "Seç",
     "yes": "Evet",
-    "no": "Hayır"
+    "no": "Hayır",
+    "ok": "Tamam",
+    "error": "Hata!"
   },
   "Addresses": {
     "saved-addresses": "Kayıtlı Adresler",
-    "add-new-address": "Yeni Adres Ekle"
+    "add-new-address": "Yeni Adres Ekle",
+    "empty-list": "Henüz hiç adresiniz yok"
   },
   "Add-Address": {
     "address-title": "Adres başlığı (Ev, işyeri, vs.)",
-    "city" : "İl",
+    "city": "İl",
     "district": "İlçe",
     "address-details": "Adres detayı",
     "add-success": "Adresin başarıyla kaydedildi!",
@@ -29,5 +32,12 @@
   "Navigation": {
     "my-addresses": "Adreslerim",
     "your-address-info": "Adres Bilgilerin"
+  },
+  "Error": {
+    "not-found": "Adresler bulunamadı. İnternet problemi yaşıyor olabilirsiniz. Lütfen daha sonra tekrar deneyiniz.",
+    "add-address": "Adres eklenirken bir hata oluştu.",
+    "update-address": "Adres güncellenirken bir hata oluştu.",
+    "delete-address": "Adres silinirken bir hata oluştu.",
+    "occured": "Beklenmeyen bir hata oluştu"
   }
 }
