@@ -4,13 +4,17 @@ import { ParamText } from '../../../components/Text';
 import LocationFill from '../../../../assets/Icons/locationFill';
 import ArrowRight from '../../../../assets/Icons/arrowRight';
 import { useTheme } from '../../../hooks/useTheme';
-import { capitalize, formatDistrictCity } from '../../../utils/formatting';
+import { capitalize } from '../../../utils/formatting';
 import { IAddress } from '../../../types/addressTypes';
 
 interface AddressItemProps {
 	item: IAddress;
 	onPress: () => void;
 }
+
+const width = Dimensions.get('window').width;
+const textContainerWidth = (width - 40) / 2.5;
+const rightSideWidth = textContainerWidth / 1.4;
 
 export const AddressItem: React.FC<AddressItemProps> = ({ item, onPress }) => {
 	const { ColorPallet } = useTheme();
@@ -20,7 +24,7 @@ export const AddressItem: React.FC<AddressItemProps> = ({ item, onPress }) => {
 			<View style={styles.renderItemLeft}>
 				<LocationFill style={styles.locationIcon} />
 				<View style={styles.renderItemTexts}>
-					<ParamText numberOfLines={2} fontType={'medium14'}>
+					<ParamText numberOfLines={1} fontType={'medium14'}>
 						{capitalize(item.addressTitle)}
 					</ParamText>
 					<ParamText
@@ -34,10 +38,13 @@ export const AddressItem: React.FC<AddressItemProps> = ({ item, onPress }) => {
 			</View>
 			<View style={styles.renderItemRight}>
 				<ParamText
-					style={{ color: ColorPallet.brand.primaryText }}
+					numberOfLines={1}
+					style={{
+						color: ColorPallet.brand.primaryText,
+					}}
 					fontType={'light12'}
 				>
-					{formatDistrictCity(item)}
+					{capitalize(item.city)}
 				</ParamText>
 				<ArrowRight />
 			</View>
@@ -55,12 +62,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	renderItemTexts: {
-		width: Dimensions.get('window').width * 0.35,
+		width: textContainerWidth,
 	},
 	renderItemRight: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'flex-end',
+		width: rightSideWidth,
 	},
 	locationIcon: {
 		marginRight: 16,
