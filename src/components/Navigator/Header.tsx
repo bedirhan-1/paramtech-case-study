@@ -56,18 +56,24 @@ export const Header = (route: any) => {
 				<ParamText style={TextTheme.headerLabel} fontType={'regular16'}>
 					{options.headerTitle}
 				</ParamText>
-				<TouchableOpacity
-					onPress={handleLanguageChange}
-					style={[styles.icon, styles.changeLang]}
-				>
-					<Language fill={ColorPallet.grayscale.grey} height={30} width={30} />
-					<ParamText
-						style={{ color: ColorPallet.grayscale.grey }}
-						fontType={'medium16'}
+				{!route.progress.previous && (
+					<TouchableOpacity
+						onPress={handleLanguageChange}
+						style={[styles.icon, styles.changeLang]}
 					>
-						{currentLanguage.toUpperCase()}
-					</ParamText>
-				</TouchableOpacity>
+						<Language
+							fill={ColorPallet.grayscale.grey}
+							height={30}
+							width={30}
+						/>
+						<ParamText
+							style={{ color: ColorPallet.grayscale.grey }}
+							fontType={'medium16'}
+						>
+							{currentLanguage.toUpperCase()}
+						</ParamText>
+					</TouchableOpacity>
+				)}
 			</View>
 			<View style={styles.endTitle}>
 				<ParamText style={[TextTheme.headerTitle]} fontType={'medium20'}>

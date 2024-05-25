@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ErrorAlert } from '../utils/errorAlert';
 
 const axiosInstance = axios.create({
 	headers: {

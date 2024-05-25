@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, forwardRef, useEffect } from 'react';
+import React, { Dispatch, SetStateAction, forwardRef } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
