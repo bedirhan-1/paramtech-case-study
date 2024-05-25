@@ -22,6 +22,7 @@ export interface IBrandColors {
 	secondaryText: string;
 	secondary: string;
 	background: string;
+	error: string;
 }
 
 const GrayscaleColors = {
@@ -42,6 +43,7 @@ const BrandColors = {
 	primaryText: '#3D2852',
 	secondaryText: '#6F6085',
 	background: '#FFFFFF',
+	error: '#cb3e3e',
 };
 
 export const ColorPallet: IColorPallet = {
