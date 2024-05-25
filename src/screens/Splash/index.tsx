@@ -9,6 +9,7 @@ import { fetchAddresses } from '../../store/features/address/addressSlice';
 import { ParamText } from '../../components/Text';
 import { useTheme } from '../../hooks/useTheme';
 import { useTranslation } from 'react-i18next';
+import { ErrorAlert } from '../../utils/errorAlert';
 
 export const Splash: React.FC = () => {
 	const { ColorPallet } = useTheme();
@@ -24,8 +25,8 @@ export const Splash: React.FC = () => {
 			try {
 				await dispatch(fetchAddresses()).unwrap();
 				navigation.replace(StackScreens.addressList);
-			} catch (e) {
-				console.warn(e);
+			} catch (e: any) {
+				ErrorAlert(t(e), t('Global.error'), t('Global.ok'));
 			}
 		};
 
@@ -37,9 +38,9 @@ export const Splash: React.FC = () => {
 			<StatusBar hidden />
 			<Image style={styles.logo} source={require('../../../assets/Logo.png')} />
 			<ParamText style={{ color: ColorPallet.brand.primary }}>
-				<ParamText fontType={'bold16'}>{t("Global.pay")}</ParamText>
-				{t("Global.or")}
-				<ParamText fontType={'bold16'}>{t("Global.get-paid")}</ParamText>
+				<ParamText fontType={'bold16'}>{t('Global.pay')}</ParamText>
+				{t('Global.or')}
+				<ParamText fontType={'bold16'}>{t('Global.get-paid')}</ParamText>
 			</ParamText>
 		</View>
 	);
