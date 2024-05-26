@@ -21,7 +21,6 @@
   "Add-Address": {
     "address-title": "Adres başlığı (Ev, işyeri, vs.)",
     "city": "İl",
-    "district": "İlçe",
     "address-details": "Adres detayı",
     "add-success": "Adresin başarıyla kaydedildi!",
     "update-success": "Adresin başarıyla güncellendi!",

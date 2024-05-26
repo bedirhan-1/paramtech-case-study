@@ -21,7 +21,6 @@
   "Add-Address": {
     "address-title": "Address title (Home, workplace etc.)",
     "city": "City",
-    "district": "District",
     "address-details": "Address details",
     "add-success": "Your address has been created successfully!",
     "update-success": "Your address has been updated successfully!",
