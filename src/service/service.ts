@@ -1,12 +1,13 @@
 import httpClient from './axios';
-import { CreatedAddress, IAddress } from '../types/addressTypes';
-import { Api } from '../types/apiTypes';
+import { ICreatedAddress } from '../types/addressTypes';
+import { IApi } from '../types/apiTypes';
 
-const api: Api = {
+const api: IApi = {
 	address: {
 		getAll: () => httpClient.get('addresses'),
-		add: (body: CreatedAddress) => httpClient.post('addresses', body),
-		update: (body: IAddress) => httpClient.put(`addresses/${body.id}`, body),
+		add: (body: ICreatedAddress) => httpClient.post('addresses', body),
+		update: (id: string, body: ICreatedAddress) =>
+			httpClient.put(`addresses/${id}`, body),
 		delete: (id: string) => httpClient.delete(`addresses/${id}`),
 	},
 	city: {

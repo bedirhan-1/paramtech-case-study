@@ -1,4 +1,3 @@
-// useAddAddress.ts
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -14,8 +13,8 @@ import {
 	deleteAddress,
 	updateAddress,
 } from '../store/features/address/addressSlice';
-import { StatusTypes } from '../types/addressSliceTypes';
 import { ContentType } from '../components/Sheet/InfoSheet';
+import { StatusTypes } from '../types/addressSliceTypes';
 
 export const useAddAddress = () => {
 	const navigation =
@@ -34,9 +33,8 @@ export const useAddAddress = () => {
 	const [address, setAddress] = useState<IAddress>({
 		[AddressInfo.AddressTitle]: passedAddress?.addressTitle ?? '',
 		[AddressInfo.City]: passedAddress?.city ?? '',
-		[AddressInfo.District]: passedAddress?.district ?? '',
 		[AddressInfo.AddressDetails]: passedAddress?.addressDetails ?? '',
-		id: passedAddress?.id ?? '',
+		id: passedAddress?.id ? passedAddress.id : undefined,
 	});
 	const [selectedCity, setSelectedCity] = useState<string>(address.city);
 	const [isSubmitDisabled, setIsSubmitDisabled] = useState<boolean>(true);
@@ -90,7 +88,9 @@ export const useAddAddress = () => {
 
 	useEffect(() => {
 		if (confirmationResponse === true) {
-			dispatch(deleteAddress(address.id));
+			if (address.id != null) {
+				dispatch(deleteAddress(address.id));
+			}
 			setCurrentAction(ContentType.delete);
 			setIsComponentFinished(true);
 			setConfirmationResponse(null);
@@ -114,7 +114,6 @@ export const useAddAddress = () => {
 		const isFormEmpty =
 			!address[AddressInfo.AddressTitle] ||
 			!selectedCity ||
-			!address[AddressInfo.District] ||
 			!address[AddressInfo.AddressDetails];
 		if (!params?.passedAddress) {
 			setIsSubmitDisabled(isFormEmpty);
@@ -123,7 +122,6 @@ export const useAddAddress = () => {
 				address[AddressInfo.AddressTitle] ===
 					params.passedAddress.addressTitle &&
 				selectedCity === params.passedAddress.city &&
-				address[AddressInfo.District] === params.passedAddress.district &&
 				address[AddressInfo.AddressDetails] ===
 					params.passedAddress.addressDetails;
 			setIsSubmitDisabled(isFormEmpty || isFormUnchanged);
