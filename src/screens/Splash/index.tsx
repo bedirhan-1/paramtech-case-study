@@ -23,10 +23,10 @@ export const Splash: React.FC = () => {
 	useEffect(() => {
 		const prepareApp = async () => {
 			try {
-				await dispatch(fetchAddresses()).unwrap();
+				await dispatch(fetchAddresses());
 				navigation.replace(StackScreens.addressList);
 			} catch (e: any) {
-				ErrorAlert(t(e), t('Global.error'), t('Global.ok'));
+				ErrorAlert(e, t('Global.error'), t('Global.ok'));
 			}
 		};
 
