@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../../../service/service';
-import { CreatedAddress, IAddress } from '../../../types/addressTypes';
+import { ICreatedAddress, IAddress } from '../../../types/addressTypes';
 import {
 	AddressDispatchAction,
 	AddressesState,
@@ -22,7 +22,7 @@ export const fetchAddresses = createAsyncThunk<
 
 export const addAddress = createAsyncThunk<
 	IAddress,
-	CreatedAddress,
+	ICreatedAddress,
 	{ rejectValue: string }
 >(
 	AddressDispatchAction.ADD_ADDRESS,
@@ -45,8 +45,14 @@ export const updateAddress = createAsyncThunk<
 >(
 	AddressDispatchAction.UPDATE_ADDRESS,
 	async (updatedAddress, { rejectWithValue }) => {
+		const temp: ICreatedAddress = {
+			city: updatedAddress.city,
+			addressDetails: updatedAddress.addressDetails,
+			addressTitle: updatedAddress.addressTitle,
+		};
+
 		try {
-			const response = await api.address.update(updatedAddress);
+			const response = await api.address.update(updatedAddress.id!, temp);
 			return response.data;
 		} catch (error: any) {
 			return rejectWithValue(

@@ -19,7 +19,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 	return (
 		<View style={styles.innerContainer}>
 			<ParamInput
-				maxLength={12}
+				maxLength={30}
 				placeholder={t('Add-Address.address-title')}
 				style={styles.input}
 				value={address[AddressInfo.AddressTitle]}
@@ -32,12 +32,6 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 				multipleSelect={true}
 				onMultiSelect={cityOnPress}
 				onChangeText={value => onChange(AddressInfo.City, value)}
-			/>
-			<ParamInput
-				placeholder={t('Add-Address.district')}
-				style={styles.input}
-				value={address[AddressInfo.District]}
-				onChangeText={value => onChange(AddressInfo.District, value)}
 			/>
 			<ParamInput
 				placeholder={t('Add-Address.address-details')}

@@ -1,20 +1,18 @@
 export enum AddressInfo {
 	AddressTitle = 'addressTitle',
 	City = 'city',
-	District = 'district',
 	AddressDetails = 'addressDetails',
 }
 
-export type CreatedAddress = {
+export type ICreatedAddress = {
 	addressTitle: string;
-	city: string;
-	district: string;
 	addressDetails: string;
+	city: string;
 };
 
 export type IAddress = {
-	id: string;
-} & CreatedAddress;
+	id: string | undefined;
+} & ICreatedAddress;
 
 export type City = {
 	city: string;
