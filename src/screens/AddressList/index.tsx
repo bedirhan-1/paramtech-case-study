@@ -66,7 +66,7 @@ export const AddressList: React.FC = () => {
 							flex: addresses.length ? 0 : undefined,
 							borderWidth: 1,
 							borderRadius: 8,
-							marginBottom: 10,
+							marginBottom: 30,
 							borderColor: ColorPallet.grayscale.lightGrey,
 						}}
 					/>
@@ -110,5 +110,6 @@ const styles = StyleSheet.create({
 		paddingTop: 20,
 		justifyContent: 'space-between',
 		flex: 1,
+		paddingBottom: 10,
 	},
 });

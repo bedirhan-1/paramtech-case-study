@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
-import { StyleSheet, Text as NativeText, TextProps } from 'react-native';
+import { StyleSheet, Text, TextProps } from 'react-native';
 import { FontStyleEnum, FontTheme } from '../../theme';
 
 interface ParamTextType extends TextProps {
 	children: string | ReactNode | ReactNode[];
 	style?: any;
 	fontType?: keyof typeof FontStyleEnum;
-	color?: keyof typeof FontTheme;
 }
 
 export const ParamText: React.FC<ParamTextType> = ({
@@ -16,13 +15,13 @@ export const ParamText: React.FC<ParamTextType> = ({
 	...props
 }) => {
 	return children ? (
-		<NativeText
+		<Text
 			style={StyleSheet.flatten([FontTheme[fontType], style])}
 			accessibilityRole="text"
 			testID="text"
 			{...props}
 		>
 			{children}
-		</NativeText>
+		</Text>
 	) : null;
 };

@@ -79,7 +79,7 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 					{status === StatusTypes.loading ? (
 						<ActivityIndicator size="large" color={ColorPallet.brand.primary} />
 					) : status === StatusTypes.succeeded ? (
-						<BottomSheetView style={styles.contentContainer}>
+						<BottomSheetView>
 							<View style={styles.icon}>{renderIcon()}</View>
 							<ParamText style={TextTheme.bottomSheet}>
 								{renderText()}
@@ -106,7 +106,9 @@ export const InfoSheet = forwardRef<BottomSheetMethods, SheetContentType>(
 							<View style={styles.icon}>
 								<Error fill={ColorPallet.brand.error} />
 							</View>
-							<ParamText>{error ? t(error) : t('Error.occured')}</ParamText>
+							<ParamText style={styles.errorText}>
+								{error ? t(error) : t('Error.occured')}
+							</ParamText>
 							<View style={styles.buttonContainer}>
 								<Button
 									style={styles.button}
@@ -129,9 +131,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	contentContainer: {
-		paddingTop: 32,
-	},
 	icon: {
 		alignItems: 'center',
 	},
@@ -141,5 +140,9 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		flex: 1,
+	},
+	errorText: {
+		textAlign: 'center',
+		paddingHorizontal: 20,
 	},
 });

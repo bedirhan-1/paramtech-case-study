@@ -54,7 +54,7 @@ export const ColorPallet: IColorPallet = {
 export const FontTheme = {
 	light12: {
 		fontSize: 12,
-		fontWeight: 'poppinsLight',
+		fontFamily: 'poppinsLight',
 	},
 	light14: {
 		fontSize: 14,
