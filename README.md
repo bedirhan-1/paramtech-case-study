@@ -1,3 +1,9 @@
+[Developer Notes](developer-notes.md)
+
+[API docs](./src/service/use-api.md)
+
+[Store Usage docs](./src/store/store-usage.md)
+
 ## Address Application
 
 This project is a mobile application where users can enter and manage their address information. It was developed using
