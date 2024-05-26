@@ -3,6 +3,10 @@
 The address application provides two endpoints: addresses and cities. Below are the details for each endpoint and their
 usage:
 
+## Postman Collection
+
+[click for open the collection](https://www.postman.com/blue-station-354277/workspace/paramtech-case-study/folder/16478148-b97ad295-5495-4dda-a708-feea0a54f041)
+
 ## Endpoints
 
 1. `addresses`
@@ -34,7 +38,6 @@ curl -X POST https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList \
 -d '{
 "addressTitle": "address title",
 "city": "city 1",
-"district": "district 1",
 "addressDetails": "address details" 
 }'
 ```
@@ -47,7 +50,6 @@ curl -X PUT https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList/:addr
 -d '{
 "addressTitle": "address title",
 "city": "city 1",
-"district": "district 1",
 "addressDetails": "address details" 
 }'
 ```

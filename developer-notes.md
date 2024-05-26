@@ -61,7 +61,7 @@
 │   │   └── store.ts
 │   │
 │   ├── types/
-│   │   ├── addressSliceTypes.ts
+│   │   ├── addressSlice.type.ts
 │   │   ├── addressTypes.ts
 │   │   ├── apiTypes.ts
 │   │   └── navigationTypes.ts
