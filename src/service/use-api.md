@@ -27,13 +27,13 @@ usage:
 ### Fetching All Addresses
 
 ```bash
-curl -X GET https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList
+curl -X GET https://664cb006ede9a2b556513515.mockapi.io/api/v1/addresses
 ```
 
 ### Adding a New Address
 
 ```bash
-curl -X POST https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList \
+curl -X POST https://664cb006ede9a2b556513515.mockapi.io/api/v1/addresses \
 -H "Content-Type: application/json" \
 -d '{
 "addressTitle": "address title",
@@ -45,7 +45,7 @@ curl -X POST https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList \
 ### Updating an Address
 
 ```bash
-curl -X PUT https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList/:addressId \
+curl -X PUT https://664cb006ede9a2b556513515.mockapi.io/api/v1/addresses/:addressId \
 -H "Content-Type: application/json" \
 -d '{
 "addressTitle": "address title",
@@ -57,7 +57,7 @@ curl -X PUT https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList/:addr
 ### Deleting an Address
 
 ```bash
-curl -X DELETE https://664cb006ede9a2b556513515.mockapi.io/api/v1/addressList/:addressId
+curl -X DELETE https://664cb006ede9a2b556513515.mockapi.io/api/v1/addresses/:addressId
 ```
 
 ### Fetching All Cities
