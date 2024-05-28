@@ -29,6 +29,7 @@ Expo, React Native, TypeScript, React Navigation, Yarn, and Localization.
 
 ## Step-by-Step Installation
 
+First of all reate .env file. Copy from .env.sample
 1. Clone the repository:
 
 ```bash
